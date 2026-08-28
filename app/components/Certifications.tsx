@@ -1,40 +1,36 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import {
   Award,
-  Trophy,
   CheckCircle2,
   ExternalLink,
   Sparkles,
-  Cpu,
-  BookOpen,
   ShieldCheck,
   Linkedin,
   X,
   Maximize2,
-  Check,
-  FileCheck
+  Eye
 } from "lucide-react";
-import { profile } from "@/data/profile";
 import { FadeIn, StaggerContainer, StaggerItem, SmoothCard } from "./MotionWrapper";
 import { motion, AnimatePresence } from "framer-motion";
 
 const VERIFIED_CREDENTIALS = [
   {
-    id: "google-prompting-essentials",
-    title: "Google Prompting Essentials Specialization",
-    category: "Professional AI Certification",
+    id: "google-ai-essentials",
+    title: "Google AI Essentials",
+    category: "Professional AI Specialization",
     issuer: "Google (via Coursera)",
-    date: "June 2026",
-    credentialId: "RJUN7JDGNDEV",
+    date: "Jun 27, 2026",
+    credentialId: "GRWZTXD42969",
     badge: "Google Certified",
     icon: Sparkles,
-    hasInteractivePreview: true,
+    imagePreview: "/images/google-ai-certificate.png",
     description:
-      "Official Google certification in Artificial Intelligence (AI) and Prompt Engineering, mastering structured prompting techniques, multimodal GenAI workflows, and LLM orchestration.",
-    skills: ["Artificial Intelligence (AI)", "Prompt Engineering", "Google AI", "LLMs"],
-    verificationUrl: "https://www.coursera.org/account/accomplishments/specialization/RJUN7JDGNDEV",
+      "Official Google certification covering 5 comprehensive courses: Introduction to AI, Maximize Productivity With AI Tools, Discover the Art of Prompting, Use AI Responsibly, and Stay Ahead of the AI Curve.",
+    skills: ["Artificial Intelligence (AI)", "Prompt Engineering", "Google AI", "Productivity Workflows"],
+    verificationUrl: "https://coursera.org/verify/specialization/GRWZTXD42969",
   },
   {
     id: "sliet-engineering",
@@ -45,9 +41,9 @@ const VERIFIED_CREDENTIALS = [
     credentialId: "SLIET-2026",
     badge: "SLIET Longowal",
     icon: Award,
-    hasInteractivePreview: false,
+    imagePreview: null,
     description:
-      "Formal engineering studies covering circuit analysis, sensors, digital systems, and foundational control and software theory.",
+      "Formal engineering studies covering circuit analysis, sensors, digital systems, computing architectures, and foundational control and software theory.",
     skills: ["Control Systems", "Instrumentation", "Circuit Analysis", "Sensors"],
     verificationUrl: "https://www.linkedin.com/in/raj-aryan2204/",
   },
@@ -60,7 +56,7 @@ const VERIFIED_CREDENTIALS = [
     credentialId: "GITHUB-RAJARYAN2204",
     badge: "Verified Builds",
     icon: ShieldCheck,
-    hasInteractivePreview: false,
+    imagePreview: null,
     description:
       "Production-grade full-stack and desktop tools including SLIET Voice, InterviewX AI, VisionX computer vision assistant, and SyncBridge.",
     skills: ["Python", "TypeScript", "Next.js", "OpenCV", "PostgreSQL"],
@@ -69,7 +65,7 @@ const VERIFIED_CREDENTIALS = [
 ];
 
 export default function Certifications() {
-  const [selectedCert, setSelectedCert] = useState<string | null>(null);
+  const [selectedCertModal, setSelectedCertModal] = useState<string | null>(null);
   const linkedinCertUrl = "https://www.linkedin.com/in/raj-aryan2204/details/certifications/";
 
   return (
@@ -109,67 +105,16 @@ export default function Certifications() {
         <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           {VERIFIED_CREDENTIALS.map((item) => {
             const Icon = item.icon;
-            const isGoogle = item.id === "google-prompting-essentials";
+            const isGoogle = item.id === "google-ai-essentials";
 
             return (
-              <StaggerItem key={item.id}>
-                <SmoothCard className={`p-6 rounded border ${isGoogle ? "border-accent/40 bg-surface/90" : "border-border bg-surface"} hover:bg-[#fbf8f2] hover:border-neutral-400 transition-all duration-200 flex flex-col justify-between space-y-4 shadow-sm h-full group`}>
+              <StaggerItem key={item.id} className={isGoogle ? "sm:col-span-2" : ""}>
+                <SmoothCard className={`p-6 rounded border ${isGoogle ? "border-accent/40 bg-surface" : "border-border bg-surface"} hover:bg-[#fbf8f2] hover:border-neutral-400 transition-all duration-200 flex flex-col justify-between space-y-4 shadow-sm h-full group`}>
                   <div className="space-y-3">
                     
-                    {/* Visual Certificate Card Preview for Google Prompting Essentials */}
-                    {isGoogle && (
-                      <div
-                        onClick={() => setSelectedCert("google")}
-                        className="cursor-pointer rounded-lg bg-gradient-to-br from-amber-500/10 via-emerald-500/5 to-blue-500/10 border border-accent/40 p-4 space-y-2.5 hover:border-accent transition-all relative overflow-hidden group/cert shadow-inner"
-                        title="Click to view full certificate"
-                      >
-                        {/* Certificate Header Banner */}
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            {/* Google Colors G Icon */}
-                            <div className="w-6 h-6 rounded-full bg-white dark:bg-neutral-800 border border-border flex items-center justify-center shadow-sm">
-                              <span className="font-bold text-xs bg-gradient-to-r from-blue-500 via-green-500 to-amber-500 bg-clip-text text-transparent">
-                                G
-                              </span>
-                            </div>
-                            <span className="text-[11px] font-bold tracking-tight text-foreground font-mono">
-                              Google
-                            </span>
-                          </div>
-
-                          <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-accent/20 text-accent font-semibold flex items-center gap-1">
-                            <CheckCircle2 className="w-3 h-3" />
-                            VERIFIED
-                          </span>
-                        </div>
-
-                        {/* Certificate Body */}
-                        <div className="space-y-0.5 border-t border-border/50 pt-2">
-                          <p className="text-[10px] font-mono text-foreground-subtle uppercase">
-                            Specialization Certificate
-                          </p>
-                          <h4 className="text-sm font-bold text-foreground tracking-tight leading-tight">
-                            Google Prompting Essentials
-                          </h4>
-                          <p className="text-xs font-medium text-accent">
-                            Awarded to Raj Aryan
-                          </p>
-                        </div>
-
-                        {/* Certificate Footer with 1-click Modal Trigger */}
-                        <div className="flex items-center justify-between pt-1 text-[10px] font-mono text-foreground-subtle border-t border-border/40">
-                          <span>ID: RJUN7JDGNDEV</span>
-                          <span className="text-accent font-semibold group-hover/cert:underline flex items-center gap-1">
-                            <Maximize2 className="w-3 h-3" />
-                            <span>Preview Certificate</span>
-                          </span>
-                        </div>
-                      </div>
-                    )}
-
                     {/* Top Row: Badge & Date */}
                     <div className="flex items-center justify-between">
-                      <span className={`text-[10px] font-mono uppercase tracking-[0.2em] font-semibold flex items-center gap-1.5 px-2 py-0.5 rounded ${isGoogle ? "bg-accent/15 text-accent border border-accent/30" : "bg-surface-subtle text-accent"}`}>
+                      <span className={`text-[10px] font-mono uppercase tracking-[0.2em] font-semibold flex items-center gap-1.5 px-2.5 py-0.5 rounded ${isGoogle ? "bg-accent/15 text-accent border border-accent/30" : "bg-surface-subtle text-accent"}`}>
                         <Icon className="w-3 h-3" />
                         {item.badge}
                       </span>
@@ -179,7 +124,7 @@ export default function Certifications() {
                     </div>
 
                     {/* Title */}
-                    <h3 className="text-lg font-medium text-foreground tracking-tight group-hover:text-accent transition-colors">
+                    <h3 className="text-xl font-medium text-foreground tracking-tight group-hover:text-accent transition-colors">
                       {item.title}
                     </h3>
 
@@ -190,7 +135,7 @@ export default function Certifications() {
                       </p>
                       {item.credentialId && (
                         <p className="text-[11px] font-mono text-foreground-muted">
-                          ID: <span className="font-semibold text-foreground">{item.credentialId}</span>
+                          Credential ID: <span className="font-semibold text-foreground">{item.credentialId}</span>
                         </p>
                       )}
                     </div>
@@ -199,9 +144,43 @@ export default function Certifications() {
                     <p className="text-xs sm:text-sm text-foreground-muted leading-relaxed font-sans">
                       {item.description}
                     </p>
+
+                    {/* Visual Certificate Thumbnail Preview */}
+                    {item.imagePreview && (
+                      <div className="pt-2">
+                        <div
+                          onClick={() => setSelectedCertModal(item.imagePreview)}
+                          className="cursor-pointer rounded-lg border border-border overflow-hidden group/preview relative hover:border-accent transition-all shadow-sm bg-white dark:bg-neutral-900"
+                        >
+                          <div className="relative w-full h-44 sm:h-52 overflow-hidden flex items-center justify-center bg-neutral-100 dark:bg-neutral-950">
+                            <img
+                              src={item.imagePreview}
+                              alt={item.title}
+                              className="w-full h-full object-contain group-hover/preview:scale-[1.02] transition-transform duration-300"
+                            />
+                            
+                            {/* Hover Overlay with Preview Icon */}
+                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/preview:opacity-100 transition-opacity flex items-center justify-center gap-2 text-white font-mono text-xs font-medium backdrop-blur-[2px]">
+                              <Eye className="w-4 h-4" />
+                              <span>Click to Expand Certificate</span>
+                            </div>
+                          </div>
+
+                          <div className="p-2.5 bg-surface-subtle border-t border-border flex items-center justify-between text-xs font-mono text-foreground-muted">
+                            <span className="flex items-center gap-1.5 text-accent font-semibold text-[11px]">
+                              <CheckCircle2 className="w-3.5 h-3.5" />
+                              Verified Official Certificate (Google)
+                            </span>
+                            <span className="text-[10px] text-foreground-subtle">
+                              Click to Enlarge ↗
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
 
-                  {/* Skills tags & verification */}
+                  {/* Skills tags & verification link */}
                   <div className="pt-3 flex items-center justify-between border-t border-border/50 text-xs font-mono">
                     <div className="flex flex-wrap gap-1.5">
                       {item.skills.map((skill, sIdx) => (
@@ -214,26 +193,15 @@ export default function Certifications() {
                       ))}
                     </div>
 
-                    {isGoogle ? (
-                      <button
-                        type="button"
-                        onClick={() => setSelectedCert("google")}
-                        className="text-accent font-semibold hover:underline inline-flex items-center gap-1 transition-colors ml-2 flex-shrink-0"
-                      >
-                        <span>View Certificate</span>
-                        <Maximize2 className="w-3 h-3" />
-                      </button>
-                    ) : (
-                      <a
-                        href={item.verificationUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-foreground-muted hover:text-foreground inline-flex items-center gap-0.5 transition-colors ml-2 flex-shrink-0"
-                      >
-                        <span>Verify</span>
-                        <ExternalLink className="w-3 h-3" />
-                      </a>
-                    )}
+                    <a
+                      href={item.verificationUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-accent font-semibold hover:underline inline-flex items-center gap-1 transition-colors ml-2 flex-shrink-0"
+                    >
+                      <span>Verify Credential</span>
+                      <ExternalLink className="w-3.5 h-3.5" />
+                    </a>
                   </div>
                 </SmoothCard>
               </StaggerItem>
@@ -245,82 +213,58 @@ export default function Certifications() {
 
       {/* High-Resolution Certificate Modal */}
       <AnimatePresence>
-        {selectedCert === "google" && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-150">
+        {selectedCertModal && (
+          <div
+            onClick={() => setSelectedCertModal(null)}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-150"
+          >
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="relative w-full max-w-2xl bg-white dark:bg-[#181816] border-2 border-neutral-300 dark:border-neutral-700 rounded-xl shadow-2xl p-6 sm:p-10 space-y-6 text-neutral-900 dark:text-neutral-100 overflow-hidden"
+              onClick={(e) => e.stopPropagation()}
+              className="relative w-full max-w-4xl bg-white dark:bg-[#181816] border-2 border-neutral-300 dark:border-neutral-700 rounded-xl shadow-2xl p-4 sm:p-6 space-y-4 text-neutral-900 dark:text-neutral-100 overflow-hidden max-h-[90vh] flex flex-col justify-between"
             >
-              {/* Close Button */}
-              <button
-                type="button"
-                onClick={() => setSelectedCert(null)}
-                className="absolute top-4 right-4 p-1.5 rounded-full bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors"
-                title="Close"
-              >
-                <X className="w-5 h-5" />
-              </button>
-
-              {/* Certificate Watermark / Frame */}
-              <div className="border-4 border-double border-neutral-300 dark:border-neutral-700 p-6 sm:p-8 rounded-lg space-y-6 bg-gradient-to-b from-white via-neutral-50 to-neutral-100 dark:from-[#181816] dark:via-[#1c1c1a] dark:to-[#181816] shadow-sm">
-                
-                {/* Header with Google and Coursera Logos */}
-                <div className="flex items-center justify-between border-b border-neutral-200 dark:border-neutral-800 pb-4">
-                  <div className="flex items-center gap-2">
-                    <span className="font-bold text-2xl tracking-tight bg-gradient-to-r from-blue-500 via-green-500 to-amber-500 bg-clip-text text-transparent">
-                      Google
-                    </span>
-                  </div>
-                  <span className="text-xs font-mono text-neutral-500 uppercase tracking-widest font-semibold">
-                    coursera
-                  </span>
-                </div>
-
-                {/* Main Certificate Content */}
-                <div className="text-center space-y-3 py-2">
-                  <p className="text-xs font-mono uppercase tracking-[0.25em] text-neutral-500 dark:text-neutral-400">
-                    This is to certify that
-                  </p>
-                  
-                  <h3 className="text-2xl sm:text-3xl font-bold text-neutral-900 dark:text-white tracking-tight font-serif">
-                    Raj Aryan
+              {/* Top Header */}
+              <div className="flex items-center justify-between pb-2 border-b border-border">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-accent" />
+                  <h3 className="text-sm sm:text-base font-bold text-foreground font-mono">
+                    Google AI Essentials — Raj Aryan (Jun 27, 2026)
                   </h3>
-
-                  <p className="text-xs text-neutral-600 dark:text-neutral-300 max-w-md mx-auto leading-relaxed">
-                    has successfully completed the online, non-credit Specialization
-                  </p>
-
-                  <h4 className="text-lg sm:text-xl font-bold text-accent tracking-tight pt-1">
-                    Google Prompting Essentials Specialization
-                  </h4>
-
-                  <p className="text-xs text-neutral-500 dark:text-neutral-400 max-w-lg mx-auto leading-relaxed">
-                    Demonstrating proficiency in prompt engineering principles, multimodal AI interactions, generative workflows, and real-world AI task optimization.
-                  </p>
                 </div>
 
-                {/* Certificate Footer with ID and Verification Link */}
-                <div className="pt-4 border-t border-neutral-200 dark:border-neutral-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-mono text-neutral-500 dark:text-neutral-400">
-                  <div className="text-left space-y-0.5">
-                    <p className="font-semibold text-neutral-800 dark:text-neutral-200">
-                      Credential ID: RJUN7JDGNDEV
-                    </p>
-                    <p>Issue Date: June 2026</p>
-                  </div>
+                <button
+                  type="button"
+                  onClick={() => setSelectedCertModal(null)}
+                  className="p-1.5 rounded-full bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors"
+                  title="Close Modal"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
 
-                  <a
-                    href="https://www.coursera.org/account/accomplishments/specialization/RJUN7JDGNDEV"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 font-semibold hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-colors shadow-sm"
-                  >
-                    <span>Verify on Coursera</span>
-                    <ExternalLink className="w-3.5 h-3.5" />
-                  </a>
-                </div>
+              {/* Full Image Preview */}
+              <div className="overflow-auto flex-grow rounded-lg bg-neutral-100 dark:bg-neutral-950 flex items-center justify-center p-2 border border-border">
+                <img
+                  src={selectedCertModal}
+                  alt="Google AI Essentials Certificate"
+                  className="max-h-[65vh] w-auto object-contain rounded shadow-md"
+                />
+              </div>
 
+              {/* Footer */}
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-2 pt-2 border-t border-border text-xs font-mono text-foreground-muted">
+                <span>Credential ID: GRWZTXD42969</span>
+                <a
+                  href="https://coursera.org/verify/specialization/GRWZTXD42969"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded bg-accent text-background font-semibold hover:opacity-90 transition-opacity"
+                >
+                  <span>Verify on Coursera ↗</span>
+                  <ExternalLink className="w-3 h-3" />
+                </a>
               </div>
 
             </motion.div>
