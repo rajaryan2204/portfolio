@@ -236,10 +236,17 @@ export default function Collaborate() {
 
                 {/* Action Row */}
                 <div className="flex flex-wrap items-center justify-between gap-4 pt-3 border-t border-border/60">
-                  <span className="text-xs font-mono text-emerald-800 flex items-center gap-1.5 font-medium">
-                    <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse" />
-                    <span>Applications Open</span>
-                  </span>
+                  {opp.status === "open" ? (
+                    <span className="text-xs font-mono text-emerald-800 flex items-center gap-1.5 font-medium">
+                      <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse" />
+                      <span>Applications Open</span>
+                    </span>
+                  ) : (
+                    <span className="text-xs font-mono text-foreground-subtle flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-neutral-400" />
+                      <span>Team Formed / Closed</span>
+                    </span>
+                  )}
 
                   <div className="flex items-center gap-3">
                     {opp.externalLink && (
@@ -249,18 +256,24 @@ export default function Collaborate() {
                         rel="noopener noreferrer"
                         className="text-xs font-mono text-foreground-muted hover:text-foreground transition-colors inline-flex items-center gap-1"
                       >
-                        <span>Official Link</span>
+                        <span>{opp.id.includes("techfest") ? "techFEST Website" : "Official Link"}</span>
                         <ArrowUpRight className="w-3 h-3" />
                       </a>
                     )}
 
-                    <button
-                      onClick={() => handleOpenApply(opp)}
-                      className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-mono font-medium rounded bg-foreground text-background hover:bg-[#292524] transition-colors shadow-sm"
-                    >
-                      <Send className="w-3 h-3" />
-                      <span>Apply to Team ↗</span>
-                    </button>
+                    {opp.status === "open" ? (
+                      <button
+                        onClick={() => handleOpenApply(opp)}
+                        className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-mono font-medium rounded bg-foreground text-background hover:bg-[#292524] transition-colors shadow-sm"
+                      >
+                        <Send className="w-3 h-3" />
+                        <span>Apply to Team ↗</span>
+                      </button>
+                    ) : (
+                      <span className="px-3 py-1.5 text-xs font-mono text-foreground-subtle bg-surface-subtle border border-border rounded">
+                        Team Full (Closed)
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>

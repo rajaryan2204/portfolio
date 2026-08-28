@@ -41,88 +41,61 @@ export interface Application {
   createdAt: string;
 }
 
-// Initial pre-seeded opportunities
+// Exactly the 2 requested opportunities: SIH 2026 (Closed) & techFEST'26 SLIET (Open)
 export const INITIAL_OPPORTUNITIES: Opportunity[] = [
   {
-    id: "opp-1",
-    title: "Smart India Hackathon (SIH 2026) — Hardware & AI Track",
+    id: "opp-techfest",
+    title: "techFEST'26 SLIET — National Level Annual Technical Fest",
+    eventName: "techFEST'26 (SLIET Longowal)",
+    type: "competition",
+    description:
+      "Recruiting and forming teams to build, compete, and showcase engineering & AI projects at techFEST'26—SLIET's premier national annual technical festival. Open for hardware/robotics builders, web developers, and technical presenters!",
+    rolesNeeded: ["Embedded & Robotics Builder", "Full-Stack Web Dev (Next.js/React)", "Project Presenter & Pitcher"],
+    deadline: "Active / Registrations Open",
+    teamSize: "4-6 Members (Slots Open)",
+    status: "open",
+    externalLink: "https://www.techfest26.com/",
+    datePosted: "Active",
+  },
+  {
+    id: "opp-sih",
+    title: "Smart India Hackathon (SIH 2026) — Hardware & AI Edition",
     eventName: "Smart India Hackathon 2026",
     type: "hackathon",
     description:
-      "Forming a multidisciplinary team from SLIET and partner institutions to build an AI-powered smart industrial automation and safety monitoring system.",
-    rolesNeeded: ["IoT & Embedded Firmware Dev", "UI/UX & Frontend (Next.js)", "Computer Vision / ML Dev"],
-    deadline: "October 15, 2026",
-    teamSize: "6 Members (2 Slots Open)",
-    status: "open",
+      "Team formation successfully completed for SIH 2026 Hardware & AI edition. Multidisciplinary SLIET team working on smart industrial automation and safety monitoring systems.",
+    rolesNeeded: ["Team Slots Full (Team Formed)"],
+    deadline: "Applications Closed",
+    teamSize: "6 Members (Full)",
+    status: "closed",
     externalLink: "https://sih.gov.in",
-    datePosted: "Aug 2026",
-  },
-  {
-    id: "opp-2",
-    title: "HackSLIET 2026 — Annual National Hackathon",
-    eventName: "HackSLIET 2026",
-    type: "hackathon",
-    description:
-      "Teaming up to build a high-impact campus and healthcare productivity platform with real-time sync and voice AI capabilities.",
-    rolesNeeded: ["Full-Stack Next.js Dev", "Backend & API Engineer", "Product Pitch / Presenter"],
-    deadline: "November 20, 2026",
-    teamSize: "4 Members (1 Slot Open)",
-    status: "open",
-    datePosted: "Aug 2026",
-  },
-  {
-    id: "opp-3",
-    title: "VisionX v2.0 — Open Source Core Contributors",
-    eventName: "VisionX AI Project",
-    type: "opensource",
-    description:
-      "Open-source development for desktop computer vision assistant (YOLOv8 + PyQt6 + OpenCV). Looking for contributors for cross-platform packaging, screen capture optimizations, and custom model training.",
-    rolesNeeded: ["Python / OpenCV Developer", "PyQt6 / GUI Designer", "Documentation & QA Tester"],
-    deadline: "Rolling / Open",
-    teamSize: "Open Community",
-    status: "open",
-    externalLink: "https://github.com/rajaryan2204/VisionX",
-    datePosted: "Aug 2026",
-  },
-  {
-    id: "opp-4",
-    title: "SyncBridge Mac-Android Sync — Android Bluetooth & WiFi P2P",
-    eventName: "SyncBridge Ecosystem",
-    type: "research",
-    description:
-      "Researching and implementing zero-latency peer-to-peer Wi-Fi and Bluetooth BLE background daemon for instantaneous clipboard synchronization between Android and macOS.",
-    rolesNeeded: ["Android Kotlin Developer", "macOS Swift / System Utility Dev"],
-    deadline: "December 30, 2026",
-    teamSize: "3 Members (1 Slot Open)",
-    status: "open",
-    externalLink: "https://github.com/rajaryan2204/SyncBridge",
-    datePosted: "Aug 2026",
+    datePosted: "Closed",
   },
 ];
 
-// Initial sample application for demonstration
+// Initial sample application
 export const INITIAL_APPLICATIONS: Application[] = [
   {
     id: "app-1",
-    opportunityId: "opp-1",
-    opportunityTitle: "Smart India Hackathon (SIH 2026) — Hardware & AI Track",
+    opportunityId: "opp-techfest",
+    opportunityTitle: "techFEST'26 SLIET — National Level Annual Technical Fest",
     applicantName: "Aman Verma",
     applicantEmail: "aman.verma@example.com",
     applicantGithub: "https://github.com/aman-verma",
     applicantLinkedin: "https://linkedin.com/in/aman-verma",
     applicantCollege: "SLIET Longowal (ECE)",
-    applicantSkills: ["ESP32", "Arduino", "C++", "Sensors"],
-    roleApplied: "IoT & Embedded Firmware Dev",
+    applicantSkills: ["Arduino", "Sensors", "C++", "Robotics"],
+    roleApplied: "Embedded & Robotics Builder",
     message:
-      "Hi Raj! I'm a 2nd year ECE student at SLIET with strong hands-on experience in ESP32, sensor interfacing, and MQTT protocols. Would love to team up for SIH 2026!",
-    status: "accepted",
+      "Hi Raj! I'm an ECE student at SLIET with hands-on experience in microcontroller hardware and sensors. Would love to team up for techFEST'26!",
+    status: "pending",
     createdAt: "2026-08-28T14:30:00Z",
   },
 ];
 
 const STORAGE_KEYS = {
   USER: "raj_portfolio_user",
-  OPPORTUNITIES: "raj_portfolio_opportunities",
+  OPPORTUNITIES: "raj_portfolio_opportunities_v2", // bumped key so newly updated listings reflect immediately
   APPLICATIONS: "raj_portfolio_applications",
   ADMIN_AUTH: "raj_portfolio_admin_authenticated",
 };
