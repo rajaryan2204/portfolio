@@ -255,34 +255,9 @@ export default function Collaborate() {
           </div>
         </div>
 
-        {/* Not Logged In Notice Banner */}
-        {!currentUser && (
-          <div className="p-4 rounded-lg bg-surface border border-border flex items-center justify-between gap-4 shadow-sm">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded bg-surface-subtle border border-border/80 text-accent">
-                <Lock className="w-4 h-4" />
-              </div>
-              <div>
-                <h4 className="text-xs font-semibold text-foreground font-mono">
-                  Authentication Required to Apply
-                </h4>
-                <p className="text-xs text-foreground-muted">
-                  Please sign in with Google first. Once signed in, you can apply for open team slots and track real-time status.
-                </p>
-              </div>
-            </div>
-
-            <button
-              onClick={() => setAuthModalOpen(true)}
-              className="text-xs font-mono font-medium px-3.5 py-1.5 rounded bg-foreground text-background hover:bg-[#292524] transition-colors whitespace-nowrap shadow-sm"
-            >
-              Sign In ↗
-            </button>
-          </div>
-        )}
-
-        <p className="text-base text-foreground-muted max-w-2xl leading-relaxed">
-          I regularly team up with driven engineering students, developers, and creators for national technical fests, hackathons, and AI builds. Browse open slots below and track your application status in real-time across any device.
+        {/* Public Browsing Note */}
+        <p className="text-sm sm:text-base text-foreground-muted max-w-2xl leading-relaxed font-sans">
+          I regularly team up with driven engineering students, developers, and creators for national technical fests, hackathons, and hardware builds. Browse open slots below — sign in with Google when you&apos;re ready to apply or track your status.
         </p>
 
         {/* Filter Tabs */}
@@ -312,8 +287,14 @@ export default function Collaborate() {
         {/* Opportunities List */}
         <div className="space-y-4">
           {filteredOpportunities.length === 0 ? (
-            <div className="py-12 text-center text-sm font-mono text-foreground-muted bg-surface rounded border border-border">
-              No opportunities open in this category right now.
+            <div className="py-12 px-6 text-center space-y-2 bg-surface rounded border border-border">
+              <Sparkles className="w-6 h-6 text-accent mx-auto" />
+              <h4 className="text-sm font-medium text-foreground">
+                Coming Soon — New Hackathons & Events
+              </h4>
+              <p className="text-xs text-foreground-muted max-w-md mx-auto">
+                No active slots in this category right now. New team recruitments for upcoming national fests and hackathons will be posted here soon.
+              </p>
             </div>
           ) : (
             filteredOpportunities.map((opp) => (

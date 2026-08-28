@@ -58,23 +58,28 @@ export default function Skills() {
           {skillGroups.map((group) => (
             <StaggerItem
               key={group.index}
-              className="py-7 first:pt-2 last:pb-2 grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 items-baseline group"
+              className="py-6 first:pt-2 last:pb-2 grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-8 items-start md:items-baseline group"
             >
               {/* Index & Category (5 cols) */}
-              <div className="md:col-span-5 flex items-baseline gap-3">
-                <span className="text-lg font-mono font-light text-foreground-subtle group-hover:text-accent transition-colors select-none">
+              <div className="md:col-span-4 flex items-baseline gap-3">
+                <span className="text-base sm:text-lg font-mono font-light text-foreground-subtle group-hover:text-accent transition-colors select-none">
                   {group.index}
                 </span>
-                <h3 className="text-base sm:text-lg font-medium text-foreground tracking-tight group-hover:translate-x-1 transition-transform">
+                <h3 className="text-base sm:text-lg font-medium text-foreground tracking-tight group-hover:translate-x-0.5 transition-transform">
                   {group.category}
                 </h3>
               </div>
 
-              {/* Technologies List (7 cols) */}
-              <div className="md:col-span-7">
-                <p className="text-base text-foreground font-mono leading-relaxed">
-                  {group.items.join("  ·  ")}
-                </p>
+              {/* Technologies Chips List (8 cols) */}
+              <div className="md:col-span-8 flex flex-wrap gap-2 pt-1 md:pt-0">
+                {group.items.map((item, idx) => (
+                  <span
+                    key={idx}
+                    className="text-xs sm:text-sm font-mono px-3 py-1 rounded bg-surface border border-border text-foreground hover:border-neutral-400 transition-colors"
+                  >
+                    {item}
+                  </span>
+                ))}
               </div>
             </StaggerItem>
           ))}

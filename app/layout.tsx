@@ -1,35 +1,49 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { profile } from "@/data/profile";
+import AuthProvider from "./components/AuthProvider";
+
+const SITE_URL = "https://rajaryan2204.vercel.app";
 
 export const metadata: Metadata = {
-  title: `${profile.displayName} — Developer`,
-  description: `Personal portfolio of ${profile.displayName}, showcasing software projects, computer vision tools, and systems work.`,
+  metadataBase: new URL(SITE_URL),
+  title: `${profile.displayName} — Instrumentation & Control Engineer · Developer`,
+  description: `Personal portfolio of ${profile.displayName} (SLIET Longowal). Building control systems, computer vision tools, and modern web applications.`,
   keywords: [
     profile.displayName,
+    "Raj Aryan",
+    "SLIET",
+    "SLIET Longowal",
+    "Instrumentation & Control",
     "Developer",
     "Software Engineer",
     "Computer Vision",
+    "VisionX",
+    "SyncBridge",
+    "SLIET Voice",
+    "InterviewX AI",
     "Python",
     "TypeScript",
-    "React",
     "Next.js",
     "Portfolio",
   ],
-  authors: [{ name: profile.displayName, url: profile.social.github }],
+  authors: [{ name: profile.displayName, url: SITE_URL }],
   creator: profile.displayName,
+  alternates: {
+    canonical: SITE_URL,
+  },
   openGraph: {
-    title: `${profile.displayName} — Developer`,
-    description: `Personal portfolio of ${profile.displayName}, showcasing software projects, computer vision tools, and systems work.`,
-    url: profile.social.github,
+    title: `${profile.displayName} — Developer & Engineering Student`,
+    description: `1st Year Instrumentation & Control Engineering at SLIET Longowal. Developer building intelligent software, desktop tools, and web applications.`,
+    url: SITE_URL,
     siteName: `${profile.displayName} Portfolio`,
     locale: "en_US",
     type: "website",
   },
   twitter: {
-    card: "summary",
-    title: `${profile.displayName} — Developer`,
-    description: `Personal portfolio of ${profile.displayName}, showcasing software projects, computer vision tools, and systems work.`,
+    card: "summary_large_image",
+    title: `${profile.displayName} — Developer & Engineering Student`,
+    description: `Personal portfolio of ${profile.displayName} (SLIET Longowal). Explore software projects, computer vision tools, and daily logs.`,
     creator: profile.displayName,
   },
   robots: {
@@ -39,12 +53,13 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#ede8dc",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ede8dc" },
+    { media: "(prefers-color-scheme: dark)", color: "#121211" },
+  ],
   width: "device-width",
   initialScale: 1,
 };
-
-import AuthProvider from "./components/AuthProvider";
 
 export default function RootLayout({
   children,
@@ -52,8 +67,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="bg-[#ede8dc]">
-      <body className="bg-[#ede8dc] text-[#171717] antialiased min-h-screen font-sans">
+    <html lang="en" className="scroll-smooth">
+      <body className="bg-background text-foreground antialiased min-h-screen font-sans">
         <AuthProvider>{children}</AuthProvider>
       </body>
     </html>

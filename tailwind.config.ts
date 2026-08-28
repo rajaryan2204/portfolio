@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
+  darkMode: "class",
   content: [
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -10,19 +11,19 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "#ede8dc", // Warm editorial cream / linen
-        surface: "#f5f0e6",    // Slightly lifted warm card surface
-        "surface-card": "#fbf8f2", // Crisp warm card
-        "surface-subtle": "#e4decb", // Deep sand accent
-        border: "#d8d2c2",    // 1px crisp stone border
-        "border-dark": "#171717", // Contrast border
-        foreground: "#171717", // Rich ink charcoal
-        "foreground-muted": "#68645c", // Warm editorial secondary
-        "foreground-subtle": "#948f85", // Delicate metadata stone
+        background: "var(--background)",
+        surface: "var(--surface)",
+        "surface-card": "var(--surface-card)",
+        "surface-subtle": "var(--surface-subtle)",
+        border: "var(--border)",
+        "border-dark": "var(--border-dark)",
+        foreground: "var(--foreground)",
+        "foreground-muted": "var(--foreground-muted)",
+        "foreground-subtle": "var(--foreground-subtle)",
         accent: {
-          DEFAULT: "#2d5a27", // Deep forest olive green
-          hover: "#1e3d1a",
-          muted: "rgba(45, 90, 39, 0.1)",
+          DEFAULT: "var(--accent)",
+          hover: "var(--accent-hover)",
+          muted: "var(--accent-muted)",
         },
       },
       fontFamily: {

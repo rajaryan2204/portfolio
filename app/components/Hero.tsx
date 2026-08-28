@@ -1,25 +1,38 @@
 "use client";
 
-import { ArrowDown, ArrowUpRight, Github, Linkedin, MapPin, GraduationCap } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowUpRight,
+  Github,
+  Linkedin,
+  MapPin,
+  GraduationCap,
+  FileDown,
+  Sparkles,
+  Code2,
+  Cpu
+} from "lucide-react";
 import { profile } from "@/data/profile";
 import { FadeIn, SmoothCard } from "./MotionWrapper";
 import { motion } from "framer-motion";
 
 export default function Hero() {
+  const resumeUrl = profile.resumeUrl || `mailto:${profile.email}?subject=Resume%20Request%20-%20Raj%20Aryan`;
+
   return (
     <section
       id="hero"
-      className="pt-12 pb-16 sm:pt-20 sm:pb-20 md:pt-28 md:pb-28 max-w-4xl mx-auto px-5 sm:px-6"
+      className="pt-10 pb-14 sm:pt-16 sm:pb-20 md:pt-24 md:pb-24 max-w-4xl mx-auto px-5 sm:px-6"
     >
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-8 items-start">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-10 items-start">
         
         {/* Left Editorial Content (7 cols) */}
-        <div className="md:col-span-7 space-y-6 sm:space-y-8">
+        <div className="md:col-span-7 space-y-6 sm:space-y-7">
           
           {/* Section Tag */}
           <FadeIn delay={0.05} direction="up">
             <div className="flex items-center gap-2">
-              <span className="text-[10px] sm:text-[11px] font-mono font-medium tracking-[0.2em] uppercase text-accent">
+              <span className="text-[10px] sm:text-[11px] font-mono font-medium tracking-[0.2em] uppercase text-accent bg-accent/10 px-2.5 py-1 rounded">
                 01 — INSTRUMENTATION & CONTROL ENGG · DEVELOPER
               </span>
             </div>
@@ -30,49 +43,68 @@ export default function Hero() {
             <h1 className="text-3xl sm:text-5xl md:text-6xl font-medium tracking-tight text-foreground leading-[1.12]">
               Hi, I&apos;m {profile.displayName}.
             </h1>
-            <p className="text-lg sm:text-2xl text-foreground-muted font-normal leading-relaxed tracking-tight">
+            <p className="text-base sm:text-xl text-foreground-muted font-normal leading-relaxed tracking-tight font-sans">
               {profile.bio}
             </p>
           </FadeIn>
 
-          {/* Action Links */}
+          {/* Action Links & Download Resume Button */}
           <FadeIn delay={0.25} direction="up">
             <div className="pt-2 flex flex-wrap items-center gap-2.5 sm:gap-3">
+              
+              {/* View Projects CTA */}
               <motion.a
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 href="#projects"
-                className="inline-flex items-center gap-2 px-4 py-2.5 rounded bg-foreground text-background text-xs sm:text-sm font-medium hover:bg-[#292524] transition-colors duration-150 shadow-sm touch-manipulation"
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded bg-foreground text-background text-xs sm:text-sm font-medium hover:bg-[#292524] transition-colors duration-150 shadow-sm touch-manipulation font-mono"
               >
                 <span>View Projects</span>
-                <ArrowDown className="w-4 h-4" />
+                <ArrowDown className="w-3.5 h-3.5" />
               </motion.a>
 
+              {/* Download Resume Button */}
+              <motion.a
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                href={resumeUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-2.5 rounded border border-border bg-surface text-foreground text-xs sm:text-sm font-medium hover:bg-surface-card hover:border-neutral-400 transition-all duration-150 shadow-sm touch-manipulation font-mono"
+                title="Download or Request Resume PDF"
+              >
+                <FileDown className="w-4 h-4 text-accent" />
+                <span>Resume (PDF)</span>
+              </motion.a>
+
+              {/* GitHub */}
               <motion.a
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 href={profile.social.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-2.5 rounded border border-border bg-surface text-foreground text-xs sm:text-sm font-medium hover:bg-surface-subtle transition-colors duration-150 shadow-sm touch-manipulation"
+                className="inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-2.5 rounded border border-border bg-surface text-foreground text-xs sm:text-sm font-medium hover:bg-surface-card hover:border-neutral-400 transition-all duration-150 shadow-sm touch-manipulation font-mono"
               >
-                <Github className="w-4 h-4" />
+                <Github className="w-3.5 h-3.5" />
                 <span>GitHub</span>
-                <ArrowUpRight className="w-3.5 h-3.5 text-foreground-subtle" />
+                <ArrowUpRight className="w-3 h-3 text-foreground-subtle" />
               </motion.a>
 
+              {/* LinkedIn */}
               <motion.a
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 href={profile.social.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-2.5 rounded border border-border bg-surface text-foreground text-xs sm:text-sm font-medium hover:bg-surface-subtle transition-colors duration-150 shadow-sm touch-manipulation"
+                className="inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-2.5 rounded border border-border bg-surface text-foreground text-xs sm:text-sm font-medium hover:bg-surface-card hover:border-neutral-400 transition-all duration-150 shadow-sm touch-manipulation font-mono"
               >
-                <Linkedin className="w-4 h-4" />
+                <Linkedin className="w-3.5 h-3.5" />
                 <span>LinkedIn</span>
-                <ArrowUpRight className="w-3.5 h-3.5 text-foreground-subtle" />
+                <ArrowUpRight className="w-3 h-3 text-foreground-subtle" />
               </motion.a>
+
             </div>
           </FadeIn>
 
@@ -92,30 +124,46 @@ export default function Hero() {
 
         </div>
 
-        {/* Right Academic Summary Card (5 cols) */}
-        <div className="md:col-span-5 md:pl-2">
+        {/* Right Column: Profile Photo & Academic Summary (5 cols) */}
+        <div className="md:col-span-5 md:pl-2 space-y-4">
           <FadeIn delay={0.2} direction="up">
-            <SmoothCard className="bg-surface border border-border rounded p-5 sm:p-6 space-y-4 shadow-sm hover:shadow-md transition-shadow">
+            
+            {/* Personal Profile Branding Card */}
+            <SmoothCard className="bg-surface border border-border rounded-lg p-5 sm:p-6 space-y-4 shadow-sm hover:shadow-md transition-all">
               
-              {/* Header info */}
-              <div className="flex items-center justify-between border-b border-border/70 pb-3">
-                <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-foreground-subtle">
-                  ACADEMICS & STUDIES / 2026
-                </span>
-                <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+              {/* Profile Avatar Header */}
+              <div className="flex items-center gap-4 border-b border-border/70 pb-4">
+                <div className="w-14 h-14 rounded-full bg-surface-subtle border-2 border-accent/40 flex items-center justify-center text-foreground font-mono text-xl font-semibold shadow-inner relative overflow-hidden flex-shrink-0">
+                  <span className="bg-gradient-to-tr from-accent to-emerald-400 bg-clip-text text-transparent font-bold">
+                    RA
+                  </span>
+                  <div className="absolute inset-0 bg-accent/5 pointer-events-none" />
+                </div>
+                
+                <div className="space-y-0.5">
+                  <div className="flex items-center gap-1.5">
+                    <h2 className="text-base font-medium text-foreground tracking-tight">
+                      Raj Aryan
+                    </h2>
+                    <span className="w-2 h-2 rounded-full bg-accent animate-pulse" title="Active & Building" />
+                  </div>
+                  <p className="text-xs font-mono text-foreground-muted">
+                    @rajaryan2204 · SLIET ICE &apos;26
+                  </p>
+                </div>
               </div>
 
               {/* Institution */}
               <div className="space-y-1">
                 <span className="text-[10px] font-mono text-foreground-subtle uppercase tracking-wider block">
-                  Institution
+                  Institution & Department
                 </span>
-                <p className="text-sm font-medium text-foreground">
+                <p className="text-xs sm:text-sm font-medium text-foreground">
                   Sant Longowal Institute of Engineering & Technology (SLIET)
                 </p>
               </div>
 
-              {/* Branch */}
+              {/* Discipline */}
               <div className="space-y-1 pt-2 border-t border-border/50">
                 <span className="text-[10px] font-mono text-foreground-subtle uppercase tracking-wider block">
                   Discipline
@@ -128,10 +176,10 @@ export default function Hero() {
               {/* Key Builds */}
               <div className="space-y-1 pt-2 border-t border-border/50">
                 <span className="text-[10px] font-mono text-foreground-subtle uppercase tracking-wider block">
-                  Recent Platforms Built
+                  Featured Platforms
                 </span>
                 <p className="text-xs text-foreground-muted font-mono">
-                  SLIET Voice · InterviewX AI · VisionX
+                  VisionX · SyncBridge · SLIET Voice · InterviewX AI
                 </p>
               </div>
 
