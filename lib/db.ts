@@ -72,6 +72,20 @@ export async function initDb() {
         date_posted TEXT
       );
     `;
+
+    await sql`
+      CREATE TABLE IF NOT EXISTS blogs (
+        id TEXT PRIMARY KEY,
+        slug TEXT UNIQUE NOT NULL,
+        title TEXT NOT NULL,
+        excerpt TEXT NOT NULL,
+        content TEXT NOT NULL,
+        tags TEXT[],
+        read_time TEXT DEFAULT '4 min read',
+        author TEXT DEFAULT 'Raj Aryan',
+        published_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `;
   } catch (err) {
     console.error("Neon DB Init Notice:", err);
   }
@@ -237,4 +251,166 @@ export async function fetchContactMessages(): Promise<ContactMessage[]> {
     }
   }
   return [];
+}
+
+// ==================== BLOG / ARTICLES ====================
+
+export interface BlogPost {
+  id: string;
+  slug: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  tags: string[];
+  readTime: string;
+  author: string;
+  publishedAt: string;
+}
+
+export const INITIAL_BLOGS: BlogPost[] = [
+  {
+    id: "blog-1",
+    slug: "bridging-control-systems-and-computer-vision",
+    title: "Bridging Control Systems Instrumentation with Modern AI Computer Vision",
+    excerpt: "Exploring how analog sensor signals, PID control loops, and low-latency computer vision (YOLOv8 & OpenCV) converge in modern engineering systems.",
+    content: `Engineering has always been about measurement, feedback, and deterministic action. In classical instrumentation and control systems, we learn how sensors capture physical phenomena—pressure, temperature, flow, and displacement—and translate them into electrical signals for controllers to maintain stability.
+
+### The Shift Toward Visual Feedback
+While traditional transducers measure point data, modern computer vision transforms every pixel in a video feed into a high-dimensional sensor. With models like YOLOv8 running at 60+ FPS on edge devices, visual feedback loops can now guide actuators and robotic arms in real time.
+
+In building **VisionX**, my goal was to bring this visual intelligence directly to the desktop:
+1. **Low Latency Capture**: Streaming video frames via OpenCV with minimal memory copy overhead.
+2. **Real-time Inference**: Processing bounding boxes and tracking regions of interest with high confidence thresholds.
+3. **Control Action**: Triggering automated desktop events and hardware signals based on detected states.
+
+The future of instrumentation isn't just about faster ADCs—it's about combining classical control theory with visual intelligence.`,
+    tags: ["Control Systems", "Computer Vision", "Python", "OpenCV"],
+    readTime: "4 min read",
+    author: "Raj Aryan",
+    publishedAt: "2026-02-15T10:00:00.000Z",
+  },
+  {
+    id: "blog-2",
+    slug: "building-sliet-voice-campus-platform",
+    title: "Building SLIET Voice: Architecture of a Student Feedback & Grievance Portal",
+    excerpt: "How we engineered a modern, anonymous grievance escalation and live campus polling system for the SLIET community using Next.js and Prisma.",
+    content: `Campus communities thrive when communication channels between students, class representatives, and administration are clear, structured, and fast.
+
+### The Problem
+Traditional college feedback often gets lost in informal WhatsApp groups or bureaucratic paperwork. Critical infrastructure issues, hostel concerns, and academic queries need a transparent, tracked workflow.
+
+### The Tech Stack & Architecture
+To solve this at SLIET, I developed **SLIET Voice (CampusVoice)**:
+- **Frontend & Serverless Backend**: Next.js App Router with React and Tailwind CSS for a responsive, mobile-first experience.
+- **Database & State**: PostgreSQL with Prisma ORM for type-safe schema migrations and relational grievance queries.
+- **Anonymous & Verified Roles**: Students can raise verified grievances anonymously to encourage honest reporting without hesitation.
+- **Live Campus Polls**: Real-time polling mechanics that aggregate student consensus on campus initiatives.
+
+Building software that directly impacts your own college community is one of the most rewarding parts of being an engineering developer.`,
+    tags: ["Next.js", "TypeScript", "SLIET", "Web Dev"],
+    readTime: "5 min read",
+    author: "Raj Aryan",
+    publishedAt: "2026-01-28T14:30:00.000Z",
+  },
+  {
+    id: "blog-3",
+    slug: "engineering-foundations-at-sliet-2026",
+    title: "First Year in Instrumentation & Control: Building Real Software in 2026",
+    excerpt: "Reflecting on starting my diploma at SLIET Longowal, balancing circuit analysis and electronics with full-stack software development.",
+    content: `Joining Sant Longowal Institute of Engineering & Technology (SLIET) in 2026 marked the beginning of my formal engineering journey in Instrumentation and Control.
+
+### Theory Meets Code
+One of the biggest advantages of studying Instrumentation is learning the physics behind computation—signal transmission, operational amplifiers, transducers, and digital logic.
+
+When you write code with an understanding of how hardware processes clock cycles and interrupts, your approach to software architecture changes completely:
+- You write more memory-conscious code.
+- You think deeply about latency and system bottlenecks.
+- You appreciate the elegance of clean protocols, whether it's SPI/I2C for hardware or REST/WebSockets for web servers.
+
+Looking forward to competing in **techFEST'26** and continuing to build projects that bridge hardware and software!`,
+    tags: ["Academics", "SLIET", "Engineering", "Journey"],
+    readTime: "3 min read",
+    author: "Raj Aryan",
+    publishedAt: "2026-01-10T09:00:00.000Z",
+  },
+];
+
+let memBlogs: BlogPost[] = [...INITIAL_BLOGS];
+
+export async function fetchBlogs(): Promise<BlogPost[]> {
+  const sql = getDb();
+  if (sql) {
+    try {
+      await initDb();
+      const rows = await sql`
+        SELECT 
+          id,
+          slug,
+          title,
+          excerpt,
+          content,
+          tags,
+          read_time AS "readTime",
+          author,
+          published_at AS "publishedAt"
+        FROM blogs
+        ORDER BY published_at DESC;
+      `;
+      if (rows && rows.length > 0) {
+        return rows as unknown as BlogPost[];
+      }
+      
+      // Auto-seed initial blogs into Neon
+      for (const blog of INITIAL_BLOGS) {
+        await sql`
+          INSERT INTO blogs (id, slug, title, excerpt, content, tags, read_time, author, published_at)
+          VALUES (${blog.id}, ${blog.slug}, ${blog.title}, ${blog.excerpt}, ${blog.content}, ${blog.tags}, ${blog.readTime}, ${blog.author}, ${blog.publishedAt})
+          ON CONFLICT (id) DO NOTHING;
+        `;
+      }
+      return INITIAL_BLOGS;
+    } catch (e) {
+      console.error("Neon fetch blogs error:", e);
+    }
+  }
+  return memBlogs;
+}
+
+export async function saveBlog(blog: BlogPost): Promise<BlogPost> {
+  const sql = getDb();
+  if (sql) {
+    try {
+      await initDb();
+      await sql`
+        INSERT INTO blogs (id, slug, title, excerpt, content, tags, read_time, author, published_at)
+        VALUES (${blog.id}, ${blog.slug}, ${blog.title}, ${blog.excerpt}, ${blog.content}, ${blog.tags}, ${blog.readTime}, ${blog.author}, ${blog.publishedAt})
+        ON CONFLICT (id) DO UPDATE SET
+          title = ${blog.title},
+          excerpt = ${blog.excerpt},
+          content = ${blog.content},
+          tags = ${blog.tags},
+          read_time = ${blog.readTime};
+      `;
+      return blog;
+    } catch (e) {
+      console.error("Neon save blog error:", e);
+    }
+  }
+  memBlogs = [blog, ...memBlogs.filter((b) => b.id !== blog.id)];
+  return blog;
+}
+
+export async function deleteBlog(id: string): Promise<boolean> {
+  const sql = getDb();
+  if (sql) {
+    try {
+      await initDb();
+      await sql`DELETE FROM blogs WHERE id = ${id};`;
+      return true;
+    } catch (e) {
+      console.error("Neon delete blog error:", e);
+    }
+  }
+  memBlogs = memBlogs.filter((b) => b.id !== id);
+  return true;
 }
