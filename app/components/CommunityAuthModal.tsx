@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { X, Github, Linkedin, Mail, GraduationCap, Code2, User, CheckCircle2, Lock } from "lucide-react";
 import { MemberUser, saveStoredUser } from "@/lib/collaborationStore";
-
 import { signIn } from "next-auth/react";
 
 interface Props {
@@ -27,11 +26,20 @@ export default function CommunityAuthModal({ isOpen, onClose, onSuccess }: Props
 
   if (!isOpen) return null;
 
-  // 1-Click Google Sign-In helper
+  // 1-Click Google Sign-In with OAuth
   const handleGoogleContinue = async () => {
     setIsGoogleLoading(true);
     try {
-      await signIn("google", { redirect: false });
+      // Trigger official NextAuth Google OAuth redirect
+      const result = await signIn("google", {
+        redirect: false,
+        callbackUrl: typeof window !== "undefined" ? window.location.href : undefined,
+      });
+
+      if (result?.error) {
+        // If popup/direct OAuth requires fallback step
+        setAuthStep("profile_details");
+      }
     } catch {
       // Fallback
     }
@@ -66,7 +74,7 @@ export default function CommunityAuthModal({ isOpen, onClose, onSuccess }: Props
       github: formData.github.startsWith("http") ? formData.github : `https://github.com/${formData.github.replace("@", "")}`,
       linkedin: formData.linkedin.startsWith("http") ? formData.linkedin : `https://linkedin.com/in/${formData.linkedin}`,
       college: formData.college || "SLIET Longowal / Engineering Student",
-      skills: skillsArray.length > 0 ? skillsArray : ["Full-Stack", "Embedded"],
+      skills: skillsArray.length > 0 ? skillsArray : ["Embedded", "Web Dev"],
       joinedAt: new Date().toISOString(),
     };
 
@@ -82,25 +90,25 @@ export default function CommunityAuthModal({ isOpen, onClose, onSuccess }: Props
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-150">
-      <div className="bg-[#ede8dc] border border-border rounded-lg max-w-md w-full p-6 sm:p-8 shadow-2xl space-y-6 relative max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 animate-in fade-in duration-150">
+      <div className="bg-[#ede8dc] border border-border rounded-lg max-w-md w-full p-5 sm:p-8 shadow-2xl space-y-6 relative max-h-[92vh] overflow-y-auto overscroll-contain">
         
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-5 right-5 text-foreground-muted hover:text-foreground p-1 transition-colors"
+          className="absolute top-4 right-4 text-foreground-muted hover:text-foreground p-1.5 transition-colors touch-manipulation"
           aria-label="Close modal"
         >
           <X className="w-5 h-5" />
         </button>
 
         {saved ? (
-          <div className="py-10 text-center space-y-3">
+          <div className="py-8 sm:py-10 text-center space-y-3">
             <CheckCircle2 className="w-12 h-12 text-accent mx-auto animate-bounce" />
             <h3 className="text-xl font-medium text-foreground">
               Signed In Successfully!
             </h3>
-            <p className="text-sm text-foreground-muted">
+            <p className="text-xs sm:text-sm text-foreground-muted">
               Connected as <span className="font-semibold text-foreground">{formData.name}</span>. You can now apply for techFEST&apos;26 and team projects in 1 click.
             </p>
           </div>
@@ -111,11 +119,11 @@ export default function CommunityAuthModal({ isOpen, onClose, onSuccess }: Props
               <Lock className="w-6 h-6 text-foreground" />
             </div>
 
-            <div className="space-y-1.5">
+            <div className="space-y-1.5 px-2">
               <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-accent font-semibold">
                 AUTHENTICATION REQUIRED
               </span>
-              <h3 className="text-2xl font-medium tracking-tight text-foreground">
+              <h3 className="text-xl sm:text-2xl font-medium tracking-tight text-foreground">
                 Sign In to Apply
               </h3>
               <p className="text-xs text-foreground-muted leading-relaxed max-w-xs mx-auto">
@@ -129,10 +137,10 @@ export default function CommunityAuthModal({ isOpen, onClose, onSuccess }: Props
                 type="button"
                 onClick={handleGoogleContinue}
                 disabled={isGoogleLoading}
-                className="w-full py-3 px-4 rounded-lg border border-neutral-400 bg-white hover:bg-neutral-50 text-neutral-800 text-sm font-medium transition-all duration-150 flex items-center justify-center gap-3 shadow-md hover:shadow"
+                className="w-full py-3.5 px-4 rounded-lg border border-neutral-400 bg-white hover:bg-neutral-50 text-neutral-800 text-sm font-medium transition-all duration-150 flex items-center justify-center gap-3 shadow-md hover:shadow active:scale-[0.99] touch-manipulation"
               >
                 {/* Google SVG */}
-                <svg className="w-5 h-5" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24">
                   <path
                     fill="#4285F4"
                     d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -161,7 +169,7 @@ export default function CommunityAuthModal({ isOpen, onClose, onSuccess }: Props
               <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-accent font-semibold">
                 STEP 2 OF 2
               </span>
-              <h3 className="text-xl font-medium tracking-tight text-foreground">
+              <h3 className="text-lg sm:text-xl font-medium tracking-tight text-foreground">
                 Complete Your Developer Profile
               </h3>
               <p className="text-xs text-foreground-muted">
@@ -182,7 +190,7 @@ export default function CommunityAuthModal({ isOpen, onClose, onSuccess }: Props
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   placeholder="e.g. Aman Sharma"
-                  className="w-full px-3 py-2 text-sm rounded bg-[#fbf8f2] border border-border text-foreground focus:border-neutral-700 transition-colors"
+                  className="w-full px-3 py-2.5 text-base sm:text-sm rounded bg-[#fbf8f2] border border-border text-foreground focus:border-neutral-700 transition-colors"
                 />
               </div>
 
@@ -198,7 +206,7 @@ export default function CommunityAuthModal({ isOpen, onClose, onSuccess }: Props
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   placeholder="aman.sharma@gmail.com"
-                  className="w-full px-3 py-2 text-sm rounded bg-[#fbf8f2] border border-border text-foreground focus:border-neutral-700 transition-colors"
+                  className="w-full px-3 py-2.5 text-base sm:text-sm rounded bg-[#fbf8f2] border border-border text-foreground focus:border-neutral-700 transition-colors"
                 />
               </div>
 
@@ -215,7 +223,7 @@ export default function CommunityAuthModal({ isOpen, onClose, onSuccess }: Props
                     value={formData.github}
                     onChange={(e) => setFormData({ ...formData, github: e.target.value })}
                     placeholder="github.com/amandev"
-                    className="w-full px-3 py-2 text-sm rounded bg-[#fbf8f2] border border-border text-foreground focus:border-neutral-700 transition-colors"
+                    className="w-full px-3 py-2.5 text-base sm:text-sm rounded bg-[#fbf8f2] border border-border text-foreground focus:border-neutral-700 transition-colors"
                   />
                 </div>
 
@@ -230,7 +238,7 @@ export default function CommunityAuthModal({ isOpen, onClose, onSuccess }: Props
                     value={formData.linkedin}
                     onChange={(e) => setFormData({ ...formData, linkedin: e.target.value })}
                     placeholder="linkedin.com/in/aman"
-                    className="w-full px-3 py-2 text-sm rounded bg-[#fbf8f2] border border-border text-foreground focus:border-neutral-700 transition-colors"
+                    className="w-full px-3 py-2.5 text-base sm:text-sm rounded bg-[#fbf8f2] border border-border text-foreground focus:border-neutral-700 transition-colors"
                   />
                 </div>
               </div>
@@ -246,7 +254,7 @@ export default function CommunityAuthModal({ isOpen, onClose, onSuccess }: Props
                   value={formData.college}
                   onChange={(e) => setFormData({ ...formData, college: e.target.value })}
                   placeholder="e.g. SLIET Longowal (ECE / ICE / CSE)"
-                  className="w-full px-3 py-2 text-sm rounded bg-[#fbf8f2] border border-border text-foreground focus:border-neutral-700 transition-colors"
+                  className="w-full px-3 py-2.5 text-base sm:text-sm rounded bg-[#fbf8f2] border border-border text-foreground focus:border-neutral-700 transition-colors"
                 />
               </div>
 
@@ -254,16 +262,16 @@ export default function CommunityAuthModal({ isOpen, onClose, onSuccess }: Props
                 <button
                   type="button"
                   onClick={() => setAuthStep("google_prompt")}
-                  className="text-xs font-mono text-foreground-muted hover:text-foreground"
+                  className="text-xs font-mono text-foreground-muted hover:text-foreground py-2 touch-manipulation"
                 >
                   ← Back
                 </button>
 
                 <button
                   type="submit"
-                  className="px-5 py-2.5 text-xs font-mono font-medium rounded bg-foreground text-background hover:bg-[#292524] transition-colors shadow-sm"
+                  className="px-4 sm:px-5 py-2.5 text-xs font-mono font-medium rounded bg-foreground text-background hover:bg-[#292524] transition-colors shadow-sm touch-manipulation"
                 >
-                  Complete Sign In & Unlock Application ↗
+                  Save & Unlock Application ↗
                 </button>
               </div>
             </form>

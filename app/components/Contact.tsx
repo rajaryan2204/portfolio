@@ -209,7 +209,7 @@ export default function Contact() {
                     onChange={(e) =>
                       setFormData({ ...formData, name: e.target.value })
                     }
-                    className="w-full px-3 py-2 text-sm rounded bg-[#fbf8f2] border border-border text-foreground placeholder:text-neutral-400 focus:border-neutral-600 transition-colors"
+                    className="w-full px-3 py-2.5 text-base sm:text-sm rounded bg-[#fbf8f2] border border-border text-foreground placeholder:text-neutral-400 focus:border-neutral-600 transition-colors"
                     placeholder="e.g. Alex Sharma"
                   />
                 </div>
@@ -229,7 +229,7 @@ export default function Contact() {
                     onChange={(e) =>
                       setFormData({ ...formData, email: e.target.value })
                     }
-                    className="w-full px-3 py-2 text-sm rounded bg-[#fbf8f2] border border-border text-foreground placeholder:text-neutral-400 focus:border-neutral-600 transition-colors"
+                    className="w-full px-3 py-2.5 text-base sm:text-sm rounded bg-[#fbf8f2] border border-border text-foreground placeholder:text-neutral-400 focus:border-neutral-600 transition-colors"
                     placeholder="alex@example.com"
                   />
                 </div>
@@ -247,7 +247,7 @@ export default function Contact() {
                     onChange={(e) =>
                       setFormData({ ...formData, subject: e.target.value })
                     }
-                    className="w-full px-3 py-2 text-sm rounded bg-[#fbf8f2] border border-border text-foreground focus:border-neutral-600 transition-colors font-sans"
+                    className="w-full px-3 py-2.5 text-base sm:text-sm rounded bg-[#fbf8f2] border border-border text-foreground focus:border-neutral-600 transition-colors font-sans"
                   >
                     <option value="Team Collaboration / Hackathon">🤝 Team Collaboration / Hackathon</option>
                     <option value="Open Source / Project Contribution">🛠️ Open Source / Project Contribution</option>
@@ -267,12 +267,12 @@ export default function Contact() {
                   <textarea
                     id="message"
                     required
-                    rows={3}
+                    rows={4}
                     value={formData.message}
                     onChange={(e) =>
                       setFormData({ ...formData, message: e.target.value })
                     }
-                    className="w-full px-3 py-2 text-sm rounded bg-[#fbf8f2] border border-border text-foreground placeholder:text-neutral-400 focus:border-neutral-600 transition-colors resize-y"
+                    className="w-full px-3 py-2.5 text-base sm:text-sm rounded bg-[#fbf8f2] border border-border text-foreground placeholder:text-neutral-400 focus:border-neutral-600 transition-colors resize-y"
                     placeholder="Tell me about your project, idea, or team..."
                   />
                 </div>

@@ -34,15 +34,15 @@ export default function Navbar() {
     <header
       className={`sticky top-0 z-50 w-full transition-all duration-200 ${
         isScrolled
-          ? "bg-[#ede8dc]/90 backdrop-blur-md border-b border-border py-3 shadow-[0_2px_12px_rgba(0,0,0,0.02)]"
+          ? "bg-[#ede8dc]/95 backdrop-blur-md border-b border-border py-3 shadow-[0_2px_12px_rgba(0,0,0,0.03)]"
           : "bg-[#ede8dc] border-b border-border/70 py-4"
       }`}
     >
-      <div className="max-w-4xl mx-auto px-6 flex items-center justify-between">
-        {/* Left: Monospace Brand Name */}
+      <div className="max-w-4xl mx-auto px-5 sm:px-6 flex items-center justify-between">
+        {/* Left: Brand Name */}
         <Link
           href="#hero"
-          className="text-base font-mono font-semibold tracking-tight text-foreground hover:text-accent transition-colors flex items-center gap-2"
+          className="text-base sm:text-lg font-mono font-semibold tracking-tight text-foreground hover:text-accent transition-colors flex items-center gap-2"
           aria-label="Home"
         >
           <span>{profile.name}</span>
@@ -69,11 +69,11 @@ export default function Navbar() {
           </nav>
         </div>
 
-        {/* Mobile Hamburger Button */}
+        {/* Mobile Hamburger Button with 44px Accessible Target */}
         <button
           type="button"
           onClick={toggleMenu}
-          className="md:hidden text-foreground-muted hover:text-foreground p-1 transition-colors"
+          className="md:hidden text-foreground-muted hover:text-foreground w-10 h-10 flex items-center justify-center rounded border border-border bg-surface/60 transition-colors touch-manipulation"
           aria-label={isOpen ? "Close menu" : "Open menu"}
           aria-expanded={isOpen}
         >
@@ -84,11 +84,11 @@ export default function Navbar() {
       {/* Mobile Drawer Menu */}
       {isOpen && (
         <nav
-          className="md:hidden border-b border-border bg-[#ede8dc] px-6 py-5 flex flex-col gap-3 animate-in fade-in slide-in-from-top-2 duration-150"
+          className="md:hidden border-b border-border bg-[#ede8dc] px-5 py-4 flex flex-col gap-1.5 animate-in fade-in slide-in-from-top-2 duration-150"
           aria-label="Mobile Navigation"
         >
-          <div className="flex items-center gap-2 text-xs font-mono text-foreground-muted pb-2 border-b border-border/60">
-            <span className="w-2 h-2 rounded-full bg-accent" />
+          <div className="flex items-center gap-2 text-xs font-mono text-foreground-muted pb-3 mb-1 border-b border-border/60">
+            <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
             <span>Open for collaborations & teamwork</span>
           </div>
 
@@ -97,7 +97,7 @@ export default function Navbar() {
               key={item.label}
               href={item.href}
               onClick={closeMenu}
-              className="text-base font-medium text-foreground-muted hover:text-foreground transition-colors py-1"
+              className="text-base font-medium text-foreground hover:text-accent hover:bg-surface px-3 py-2.5 rounded transition-colors"
             >
               {item.label}
             </a>
