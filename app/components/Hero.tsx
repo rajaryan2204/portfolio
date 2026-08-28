@@ -85,18 +85,18 @@ export default function Hero() {
                 <ArrowDown className="w-3.5 h-3.5" />
               </motion.a>
 
-              {/* Download Resume Button (Opens in New Tab) */}
+              {/* Download Resume Button (Opens /resume in New Tab) */}
               <motion.a
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                href={resumeLink}
+                href="/resume"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-2.5 rounded border border-border bg-surface text-foreground text-xs sm:text-sm font-medium hover:bg-surface-card hover:border-neutral-400 transition-all duration-150 shadow-sm touch-manipulation font-mono"
-                title="Download or View Resume PDF in new tab"
+                title="View and Print Resume (PDF)"
               >
                 <FileDown className="w-4 h-4 text-accent" />
-                <span>Download Resume (PDF)</span>
+                <span>View Resume (PDF)</span>
               </motion.a>
 
               {/* GitHub */}

@@ -32,7 +32,7 @@ export default function Navbar() {
   const toggleMenu = () => setIsOpen(!isOpen);
   const closeMenu = () => setIsOpen(false);
 
-  const resumeUrl = profile.resumeUrl || `mailto:${profile.email}?subject=Resume%20Request%20-%20Raj%20Aryan`;
+  const resumeUrl = "/resume";
 
   return (
     <header

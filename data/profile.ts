@@ -72,7 +72,7 @@ export const profile: Profile = {
   email: "raj.aryan9242@gmail.com",
   location: "India",
   timezone: "IST (UTC+5:30)",
-  resumeUrl: "mailto:raj.aryan9242@gmail.com?subject=Resume%20Request%20-%20Raj%20Aryan",
+  resumeUrl: "/resume",
 
   // Short bio statement for hero
   bio: "1st year Instrumentation & Control Engineering student at SLIET & developer building intelligent software, desktop tools, and cross-device systems.",
