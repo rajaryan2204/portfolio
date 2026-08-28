@@ -31,10 +31,12 @@ import {
   getStoredApplications,
   saveStoredApplications,
 } from "@/lib/collaborationStore";
+import { useSession, signIn, signOut } from "next-auth/react";
 import CommunityAuthModal from "./CommunityAuthModal";
 import AdminDashboard from "./AdminDashboard";
 
 export default function Collaborate() {
+  const { data: session, status: sessionStatus } = useSession();
   const [currentUser, setCurrentUser] = useState<MemberUser | null>(null);
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   const [userApplications, setUserApplications] = useState<Application[]>([]);
@@ -54,14 +56,32 @@ export default function Collaborate() {
   const [applicationSubmitted, setApplicationSubmitted] = useState(false);
 
   useEffect(() => {
-    const user = getStoredUser();
-    setCurrentUser(user);
     setOpportunities(getStoredOpportunities());
+    const stored = getStoredUser();
 
-    if (user && user.email) {
-      fetchUserStatus(user.email);
+    if (session?.user) {
+      const googleUser: MemberUser = stored || {
+        id: session.user.email || `google-${Date.now()}`,
+        name: session.user.name || "Developer",
+        email: session.user.email || "developer@gmail.com",
+        github: "https://github.com/",
+        linkedin: "https://linkedin.com/in/",
+        college: "SLIET Longowal / Engineering Student",
+        skills: ["Embedded", "Web Dev"],
+        joinedAt: new Date().toISOString(),
+      };
+      setCurrentUser(googleUser);
+      saveStoredUser(googleUser);
+      if (session.user.email) {
+        fetchUserStatus(session.user.email);
+      }
+    } else if (stored) {
+      setCurrentUser(stored);
+      if (stored.email) {
+        fetchUserStatus(stored.email);
+      }
     }
-  }, []);
+  }, [session]);
 
   // Sync application status across devices via server API
   const fetchUserStatus = async (email: string) => {
