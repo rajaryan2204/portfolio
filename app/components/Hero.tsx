@@ -74,7 +74,7 @@ export default function Hero() {
           <div className="pt-4 border-t border-border/80 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs font-mono text-foreground-subtle">
             <div className="flex items-center gap-1.5">
               <GraduationCap className="w-3.5 h-3.5 text-accent" />
-              <span>1st Year Diploma ICE (SLIET)</span>
+              <span>1st Year Diploma (SLIET)</span>
             </div>
             <div className="flex items-center gap-1.5">
               <MapPin className="w-3.5 h-3.5 text-accent" />
@@ -101,14 +101,14 @@ export default function Hero() {
               &ldquo;Bridging control systems and hardware instrumentation with modern AI vision and full-stack software.&rdquo;
             </p>
 
-            {/* Currently Active Snippet */}
+            {/* Academic Focus Snippet (Pure Academics) */}
             <div className="space-y-2 pt-2 border-t border-border/50">
               <div className="text-[11px] font-mono text-foreground-subtle uppercase tracking-wider flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-accent inline-block" />
-                <span>Primary Studies & Builds</span>
+                <span>Academic Institution</span>
               </div>
               <p className="text-xs text-foreground font-mono bg-surface-subtle p-2.5 rounded border border-border/60">
-                Diploma ICE (SLIET) · VisionX · SyncBridge
+                Sant Longowal Institute of Engineering & Technology (SLIET)
               </p>
             </div>
 

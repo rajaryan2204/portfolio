@@ -89,7 +89,7 @@ export const profile: Profile = {
   education: [
     {
       degree: "Diploma in Engineering (1st Year)",
-      field: "Instrumentation and Control Engineering (ICE)",
+      field: "Instrumentation and Control Engineering",
       institution: "Sant Longowal Institute of Engineering & Technology (SLIET)",
       period: "2026 — Present (1st Year)",
       details: "1st year technical engineering curriculum focusing on engineering sciences, circuit fundamentals, computing architectures, and introduction to instrumentation and control concepts.",
