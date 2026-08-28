@@ -11,8 +11,11 @@ import {
   Shield,
   Clock,
   CheckCircle2,
+  XCircle,
   UserPlus,
   Send,
+  Loader2,
+  Eye,
   X
 } from "lucide-react";
 import { profile } from "@/data/profile";
@@ -31,22 +34,53 @@ import AdminDashboard from "./AdminDashboard";
 export default function Collaborate() {
   const [currentUser, setCurrentUser] = useState<MemberUser | null>(null);
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
-  const [activeTab, setActiveTab] = useState<"all" | "hackathon" | "opensource" | "research">("all");
+  const [userApplications, setUserApplications] = useState<Application[]>([]);
+  const [loadingStatus, setLoadingStatus] = useState(false);
+  const [activeTab, setActiveTab] = useState<"all" | "hackathon" | "competition" | "opensource">("all");
 
   // Modals
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [adminModalOpen, setAdminModalOpen] = useState(false);
+  const [statusModalOpen, setStatusModalOpen] = useState(false);
   const [applyModalOpp, setApplyModalOpp] = useState<Opportunity | null>(null);
 
   // Application Form State
   const [selectedRole, setSelectedRole] = useState("");
   const [applicantPitch, setApplicantPitch] = useState("");
+  const [submittingApp, setSubmittingApp] = useState(false);
   const [applicationSubmitted, setApplicationSubmitted] = useState(false);
 
   useEffect(() => {
-    setCurrentUser(getStoredUser());
+    const user = getStoredUser();
+    setCurrentUser(user);
     setOpportunities(getStoredOpportunities());
+
+    if (user && user.email) {
+      fetchUserStatus(user.email);
+    }
   }, []);
+
+  // Sync application status across devices via server API
+  const fetchUserStatus = async (email: string) => {
+    setLoadingStatus(true);
+    try {
+      const res = await fetch(`/api/applications?email=${encodeURIComponent(email)}`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success && Array.isArray(data.applications)) {
+          setUserApplications(data.applications);
+        }
+      }
+    } catch {
+      // Local fallback
+      const localApps = getStoredApplications().filter(
+        (a) => a.applicantEmail.toLowerCase() === email.toLowerCase()
+      );
+      setUserApplications(localApps);
+    } finally {
+      setLoadingStatus(false);
+    }
+  };
 
   const filteredOpportunities = opportunities.filter((opp) => {
     if (activeTab === "all") return true;
@@ -64,9 +98,11 @@ export default function Collaborate() {
     }
   };
 
-  const handleSubmitApplication = (e: React.FormEvent) => {
+  const handleSubmitApplication = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!currentUser || !applyModalOpp) return;
+
+    setSubmittingApp(true);
 
     const newApp: Application = {
       id: `app-${Date.now()}`,
@@ -84,11 +120,25 @@ export default function Collaborate() {
       createdAt: new Date().toISOString(),
     };
 
+    try {
+      // POST to Neon PostgreSQL / Serverless API
+      await fetch("/api/applications", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newApp),
+      });
+    } catch {
+      // Fallback to local
+    }
+
     const existing = getStoredApplications();
     const updated = [newApp, ...existing];
     saveStoredApplications(updated);
+    setUserApplications([newApp, ...userApplications]);
 
+    setSubmittingApp(false);
     setApplicationSubmitted(true);
+
     setTimeout(() => {
       setApplyModalOpp(null);
       setApplicationSubmitted(false);
@@ -113,31 +163,37 @@ export default function Collaborate() {
             </h2>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2.5">
             {currentUser ? (
               <div className="flex items-center gap-2 text-xs font-mono text-foreground-muted bg-surface px-3 py-1.5 rounded border border-border">
                 <span className="w-2 h-2 rounded-full bg-accent" />
-                <span>Hi, {currentUser.name.split(" ")[0]}</span>
+                <span className="font-medium text-foreground">{currentUser.name.split(" ")[0]}</span>
+                
+                {/* View Applications Status Button */}
                 <button
-                  onClick={() => setAuthModalOpen(true)}
-                  className="text-accent underline ml-1"
+                  onClick={() => {
+                    fetchUserStatus(currentUser.email);
+                    setStatusModalOpen(true);
+                  }}
+                  className="inline-flex items-center gap-1 text-accent hover:underline font-semibold ml-1.5"
                 >
-                  (Edit)
+                  <Eye className="w-3 h-3" />
+                  <span>My Status ({userApplications.length})</span>
                 </button>
               </div>
             ) : (
               <button
                 onClick={() => setAuthModalOpen(true)}
-                className="inline-flex items-center gap-1.5 text-xs font-mono font-medium px-3 py-1.5 rounded bg-foreground text-background hover:bg-[#292524] transition-colors shadow-sm"
+                className="inline-flex items-center gap-1.5 text-xs font-mono font-medium px-3.5 py-1.5 rounded bg-foreground text-background hover:bg-[#292524] transition-colors shadow-sm"
               >
                 <UserPlus className="w-3.5 h-3.5" />
-                <span>Join Developer Network</span>
+                <span>Sign In / Join Team Network</span>
               </button>
             )}
 
             <button
               onClick={() => setAdminModalOpen(true)}
-              className="p-1.5 text-foreground-subtle hover:text-foreground border border-border rounded bg-surface transition-colors"
+              className="p-1.5 text-foreground-subtle hover:text-foreground border border-border rounded bg-surface transition-colors shadow-sm"
               title="Raj's Admin Control Portal"
               aria-label="Admin Control Portal"
             >
@@ -147,7 +203,7 @@ export default function Collaborate() {
         </div>
 
         <p className="text-base text-foreground-muted max-w-2xl leading-relaxed">
-          I regularly team up with driven engineering students, developers, and creators for national hackathons, open-source projects, and robotics/AI builds. Browse open team slots below and apply in 1-click!
+          I regularly team up with driven engineering students, developers, and creators for national technical fests, hackathons, and AI builds. Browse open slots below and track your application status in real-time across any device.
         </p>
 
         {/* Filter Tabs */}
@@ -156,9 +212,8 @@ export default function Collaborate() {
           {(
             [
               { key: "all", label: "All Opportunities" },
-              { key: "hackathon", label: "🏆 Hackathons" },
-              { key: "opensource", label: "🛠️ Open Source" },
-              { key: "research", label: "🔬 Engineering & IoT" },
+              { key: "competition", label: "🏆 techFEST'26 SLIET" },
+              { key: "hackathon", label: "🔒 SIH Hackathon" },
             ] as const
           ).map((tab) => (
             <button
@@ -281,34 +336,16 @@ export default function Collaborate() {
           )}
         </div>
 
-        {/* Quick Custom Idea CTA */}
-        <div className="p-6 rounded border border-border bg-[#f5f0e6] flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
-          <div className="space-y-1 text-center sm:text-left">
-            <h4 className="text-sm font-medium text-foreground">
-              Organizing another hackathon or have a custom project idea?
-            </h4>
-            <p className="text-xs text-foreground-muted">
-              Connect directly to brainstorm and build together.
-            </p>
-          </div>
-
-          <a
-            href={`mailto:${profile.email}?subject=Hackathon%20Collaboration%20-%20Raj%20Aryan`}
-            className="inline-flex items-center gap-2 px-4 py-2 text-xs font-mono font-medium rounded bg-foreground text-background hover:bg-[#292524] transition-colors whitespace-nowrap shadow-sm"
-          >
-            <span>Email Raj Directly ↗</span>
-          </a>
-        </div>
-
       </div>
 
-      {/* Auth / Register Modal */}
+      {/* Auth / Register Modal with Google option */}
       <CommunityAuthModal
         isOpen={authModalOpen}
         onClose={() => setAuthModalOpen(false)}
         onSuccess={(user) => {
           setCurrentUser(user);
           setAuthModalOpen(false);
+          fetchUserStatus(user.email);
         }}
       />
 
@@ -318,12 +355,113 @@ export default function Collaborate() {
         onClose={() => {
           setAdminModalOpen(false);
           setOpportunities(getStoredOpportunities());
+          if (currentUser?.email) {
+            fetchUserStatus(currentUser.email);
+          }
         }}
       />
 
+      {/* User Live Applications Status Modal (Across Phone / Laptop) */}
+      {statusModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-150">
+          <div className="bg-[#ede8dc] border border-border rounded-lg max-w-lg w-full p-6 sm:p-8 shadow-2xl space-y-6 relative max-h-[90vh] overflow-y-auto">
+            <button
+              onClick={() => setStatusModalOpen(false)}
+              className="absolute top-5 right-5 text-foreground-muted hover:text-foreground p-1 transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="space-y-1">
+              <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-accent font-semibold">
+                YOUR APPLICATIONS TRACKER
+              </span>
+              <h3 className="text-xl font-medium tracking-tight text-foreground">
+                Application Status for {currentUser?.name}
+              </h3>
+              <p className="text-xs text-foreground-muted">
+                Synced with cloud database for: <span className="font-mono text-foreground">{currentUser?.email}</span>
+              </p>
+            </div>
+
+            {loadingStatus ? (
+              <div className="py-10 text-center text-sm font-mono text-foreground-muted flex items-center justify-center gap-2">
+                <Loader2 className="w-4 h-4 animate-spin text-accent" />
+                <span>Checking latest decision from Raj...</span>
+              </div>
+            ) : userApplications.length === 0 ? (
+              <div className="py-8 text-center text-xs font-mono text-foreground-muted bg-surface rounded border border-border p-4">
+                You haven&apos;t applied to any team yet. Click &quot;Apply to Team&quot; on techFEST&apos;26 above!
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {userApplications.map((app) => (
+                  <div
+                    key={app.id}
+                    className="p-4 rounded border border-border bg-surface space-y-2.5 shadow-sm"
+                  >
+                    <div className="flex items-center justify-between">
+                      <h4 className="text-sm font-medium text-foreground">
+                        {app.opportunityTitle}
+                      </h4>
+                      <span
+                        className={`text-[10px] font-mono uppercase px-2 py-0.5 rounded font-medium flex items-center gap-1 ${
+                          app.status === "accepted"
+                            ? "bg-emerald-100 text-emerald-800 border border-emerald-300"
+                            : app.status === "rejected"
+                            ? "bg-rose-100 text-rose-800 border border-rose-300"
+                            : "bg-amber-100 text-amber-800 border border-amber-300"
+                        }`}
+                      >
+                        {app.status === "accepted" && <CheckCircle2 className="w-3 h-3" />}
+                        {app.status === "rejected" && <XCircle className="w-3 h-3" />}
+                        {app.status === "pending" && <Clock className="w-3 h-3" />}
+                        <span>{app.status.toUpperCase()}</span>
+                      </span>
+                    </div>
+
+                    <p className="text-xs text-foreground-muted">
+                      Role applied: <span className="font-medium text-foreground">{app.roleApplied}</span>
+                    </p>
+
+                    {/* Status Feedback Message */}
+                    <div className="text-xs font-mono p-2.5 rounded bg-surface-subtle border border-border/60">
+                      {app.status === "accepted" && (
+                        <p className="text-emerald-800 font-medium">
+                          🎉 Congratulations! Raj has accepted your application. Check your email for project coordination details!
+                        </p>
+                      )}
+                      {app.status === "rejected" && (
+                        <p className="text-rose-800">
+                          Team slots for this role have been filled. Thank you for applying and feel free to connect for future events!
+                        </p>
+                      )}
+                      {app.status === "pending" && (
+                        <p className="text-foreground-muted">
+                          Application received and currently under review by Raj. You will be notified here and on email once reviewed.
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <div className="pt-2 text-right">
+              <button
+                onClick={() => setStatusModalOpen(false)}
+                className="px-4 py-2 text-xs font-mono font-medium rounded bg-foreground text-background hover:bg-[#292524] transition-colors"
+              >
+                Close Tracker
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Team Application Modal */}
       {applyModalOpp && (
-        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-150">
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-150">
           <div className="bg-[#ede8dc] border border-border rounded-lg max-w-lg w-full p-6 sm:p-8 shadow-2xl space-y-6 relative max-h-[90vh] overflow-y-auto">
             <button
               onClick={() => setApplyModalOpp(null)}
@@ -339,7 +477,7 @@ export default function Collaborate() {
                   Application Submitted!
                 </h3>
                 <p className="text-xs text-foreground-muted leading-relaxed">
-                  Your application for <span className="font-medium text-foreground">{applyModalOpp.title}</span> has been sent to Raj Aryan. He will review your GitHub and reach out via email!
+                  Your application for <span className="font-medium text-foreground">{applyModalOpp.title}</span> has been stored and sent to Raj Aryan. You can check your acceptance status anytime under &quot;My Status&quot;!
                 </p>
               </div>
             ) : (
@@ -383,7 +521,7 @@ export default function Collaborate() {
                       rows={4}
                       value={applicantPitch}
                       onChange={(e) => setApplicantPitch(e.target.value)}
-                      placeholder="Briefly describe your relevant tech skills, projects, and what you can build for this hackathon/project..."
+                      placeholder="Briefly describe your relevant tech skills, projects, and what you can build for this technical fest/hackathon..."
                       className="w-full px-3 py-2 text-sm rounded bg-[#fbf8f2] border border-border text-foreground focus:border-neutral-700 resize-y"
                     />
                   </div>
@@ -398,9 +536,17 @@ export default function Collaborate() {
                     </button>
                     <button
                       type="submit"
-                      className="px-5 py-2.5 text-xs font-mono font-medium rounded bg-foreground text-background hover:bg-[#292524] transition-colors shadow-sm"
+                      disabled={submittingApp}
+                      className="px-5 py-2.5 text-xs font-mono font-medium rounded bg-foreground text-background hover:bg-[#292524] transition-colors shadow-sm disabled:opacity-60 flex items-center gap-1.5"
                     >
-                      Submit Team Application ↗
+                      {submittingApp ? (
+                        <>
+                          <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                          <span>Submitting...</span>
+                        </>
+                      ) : (
+                        <span>Submit Application ↗</span>
+                      )}
                     </button>
                   </div>
                 </form>
