@@ -152,14 +152,6 @@ export default function CommunityAuthModal({ isOpen, onClose, onSuccess }: Props
                 </svg>
                 <span>{isGoogleLoading ? "Connecting Google..." : "Continue with Google"}</span>
               </button>
-
-              <button
-                type="button"
-                onClick={() => setAuthStep("profile_details")}
-                className="text-xs font-mono text-foreground-muted hover:text-foreground underline transition-colors"
-              >
-                Or sign in manually with email ↗
-              </button>
             </div>
           </div>
         ) : (

@@ -62,7 +62,7 @@ export interface Profile {
 
 export const profile: Profile = {
   // --- Personal Info ---
-  name: "raj/",
+  name: "Raj Aryan",
   displayName: "Raj Aryan",
 
   // GitHub username connected directly to live API

@@ -74,7 +74,7 @@ export default function AdminDashboard({ isOpen, onClose }: Props) {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (pin === "2204" || pin.toLowerCase() === "raj2204" || pin === "admin") {
+    if (pin === "Akshat2945*" || pin === "akshat2945*") {
       setIsAuthenticated(true);
       setError(false);
     } else {
@@ -202,13 +202,13 @@ export default function AdminDashboard({ isOpen, onClose }: Props) {
                   setPin(e.target.value);
                   setError(false);
                 }}
-                placeholder="Enter PIN (e.g. 2204)"
+                placeholder="Enter Admin Password"
                 className="w-full px-4 py-2.5 text-center text-sm font-mono tracking-widest rounded bg-[#fbf8f2] border border-border text-foreground focus:border-neutral-700 transition-colors"
               />
 
               {error && (
                 <p className="text-xs text-red-600 font-mono">
-                  Incorrect PIN. (Hint: 2204)
+                  Incorrect Password.
                 </p>
               )}
 
