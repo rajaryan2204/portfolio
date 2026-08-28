@@ -1,5 +1,3 @@
-"use client";
-
 export interface MemberUser {
   id: string;
   name: string;
