@@ -16,7 +16,8 @@ import {
   Sparkles,
   Download,
   MessageCircle,
-  X
+  X,
+  ArrowUpRight
 } from "lucide-react";
 import {
   Opportunity,
@@ -26,6 +27,15 @@ import {
   getStoredApplications,
   saveStoredApplications,
 } from "@/lib/collaborationStore";
+
+interface ContactMsg {
+  id: string;
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+  createdAt: string;
+}
 
 interface Props {
   isOpen: boolean;
@@ -37,9 +47,10 @@ export default function AdminDashboard({ isOpen, onClose }: Props) {
   const [pin, setPin] = useState("");
   const [error, setError] = useState(false);
 
-  const [activeTab, setActiveTab] = useState<"applications" | "post" | "manage">("applications");
+  const [activeTab, setActiveTab] = useState<"applications" | "inquiries" | "post" | "manage">("applications");
   const [applications, setApplications] = useState<Application[]>([]);
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
+  const [inquiries, setInquiries] = useState<ContactMsg[]>([]);
 
   // New Opportunity Form State
   const [newOpp, setNewOpp] = useState<{
@@ -67,6 +78,16 @@ export default function AdminDashboard({ isOpen, onClose }: Props) {
     if (isOpen) {
       setApplications(getStoredApplications());
       setOpportunities(getStoredOpportunities());
+
+      // Fetch Inquiries from Neon DB
+      fetch("/api/contact")
+        .then((res) => res.json())
+        .then((data) => {
+          if (data?.messages) {
+            setInquiries(data.messages);
+          }
+        })
+        .catch(() => {});
     }
   }, [isOpen]);
 
@@ -88,15 +109,16 @@ export default function AdminDashboard({ isOpen, onClose }: Props) {
     );
     setApplications(updated);
     saveStoredApplications(updated);
+
+    // Sync status with server database API
+    fetch("/api/applications", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: appId, status: newStatus }),
+    }).catch((err) => console.error("Status sync error:", err));
   };
 
-  const handleDeleteApplication = (appId: string) => {
-    const updated = applications.filter((app) => app.id !== appId);
-    setApplications(updated);
-    saveStoredApplications(updated);
-  };
-
-  const handlePublishOpportunity = (e: React.FormEvent) => {
+  const handleCreateOpportunity = (e: React.FormEvent) => {
     e.preventDefault();
 
     const rolesArray = newOpp.rolesNeeded
@@ -104,27 +126,27 @@ export default function AdminDashboard({ isOpen, onClose }: Props) {
       .map((r) => r.trim())
       .filter(Boolean);
 
-    const createdOpp: Opportunity = {
+    const created: Opportunity = {
       id: `opp-${Date.now()}`,
       title: newOpp.title,
       eventName: newOpp.eventName || newOpp.title,
       type: newOpp.type,
       description: newOpp.description,
       rolesNeeded: rolesArray.length > 0 ? rolesArray : ["Developer"],
-      deadline: newOpp.deadline || "TBA",
-      teamSize: newOpp.teamSize,
+      deadline: newOpp.deadline || "Open Until Filled",
+      teamSize: newOpp.teamSize || "4 Members",
       status: "open",
       externalLink: newOpp.externalLink || undefined,
-      datePosted: "Just now",
     };
 
-    const updatedOpps = [createdOpp, ...opportunities];
-    setOpportunities(updatedOpps);
-    saveStoredOpportunities(updatedOpps);
+    const updated = [created, ...opportunities];
+    setOpportunities(updated);
+    saveStoredOpportunities(updated);
     setOppPublished(true);
 
     setTimeout(() => {
       setOppPublished(false);
+      setActiveTab("manage");
       setNewOpp({
         title: "",
         eventName: "",
@@ -135,26 +157,50 @@ export default function AdminDashboard({ isOpen, onClose }: Props) {
         teamSize: "4 Members (2 Slots Open)",
         externalLink: "",
       });
-      setActiveTab("manage");
     }, 1200);
   };
 
-  const handleDeleteOpportunity = (oppId: string) => {
-    const updated = opportunities.filter((o) => o.id !== oppId);
+  const handleDeleteOpportunity = (id: string) => {
+    const updated = opportunities.filter((o) => o.id !== id);
     setOpportunities(updated);
     saveStoredOpportunities(updated);
   };
 
-  // Export Applicants to CSV
   const handleExportCSV = () => {
-    if (applications.length === 0) return;
+    const headers = [
+      "ID",
+      "Applicant Name",
+      "Applicant Email",
+      "Event",
+      "Role Applied",
+      "College",
+      "GitHub",
+      "LinkedIn",
+      "Skills",
+      "Status",
+      "Pitch Message",
+      "Applied At",
+    ];
 
-    const headers = ["Applicant Name,Email,College,Role Applied,Opportunity,Status,GitHub,LinkedIn,Date"];
-    const rows = applications.map((app) =>
-      `"${app.applicantName}","${app.applicantEmail}","${app.applicantCollege}","${app.roleApplied}","${app.opportunityTitle}","${app.status}","${app.applicantGithub}","${app.applicantLinkedin}","${new Date(app.createdAt).toLocaleDateString()}"`
-    );
+    const rows = applications.map((app) => [
+      `"${app.id}"`,
+      `"${app.applicantName}"`,
+      `"${app.applicantEmail}"`,
+      `"${app.opportunityTitle}"`,
+      `"${app.roleApplied}"`,
+      `"${app.applicantCollege || ""}"`,
+      `"${app.applicantGithub || ""}"`,
+      `"${app.applicantLinkedin || ""}"`,
+      `"${app.applicantSkills.join(", ")}"`,
+      `"${app.status}"`,
+      `"${(app.message || "").replace(/"/g, '""')}"`,
+      `"${app.createdAt}"`,
+    ]);
 
-    const csvContent = "data:text/csv;charset=utf-8," + [headers, ...rows].join("\n");
+    const csvContent =
+      "data:text/csv;charset=utf-8," +
+      [headers.join(","), ...rows.map((e) => e.join(","))].join("\n");
+
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
@@ -165,13 +211,13 @@ export default function AdminDashboard({ isOpen, onClose }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-150">
-      <div className="bg-[#ede8dc] border border-border rounded-lg max-w-3xl w-full p-6 sm:p-8 shadow-2xl space-y-6 relative max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 animate-in fade-in duration-150">
+      <div className="bg-[#ede8dc] border border-border rounded-lg max-w-3xl w-full p-5 sm:p-8 shadow-2xl space-y-6 relative max-h-[90vh] overflow-y-auto overscroll-contain">
         
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-5 right-5 text-foreground-muted hover:text-foreground p-1 transition-colors"
+          className="absolute top-4 right-4 text-foreground-muted hover:text-foreground p-1.5 transition-colors touch-manipulation"
           aria-label="Close modal"
         >
           <X className="w-5 h-5" />
@@ -180,7 +226,7 @@ export default function AdminDashboard({ isOpen, onClose }: Props) {
         {/* PIN Authentication Screen */}
         {!isAuthenticated ? (
           <div className="max-w-md mx-auto py-8 text-center space-y-5">
-            <div className="p-3 rounded-full bg-surface border border-border w-12 h-12 flex items-center justify-center mx-auto text-accent">
+            <div className="p-3.5 rounded-full bg-surface border border-border w-12 h-12 flex items-center justify-center mx-auto text-accent">
               <Shield className="w-6 h-6" />
             </div>
 
@@ -189,7 +235,7 @@ export default function AdminDashboard({ isOpen, onClose }: Props) {
                 Raj&apos;s Admin Control Center
               </h3>
               <p className="text-xs text-foreground-muted">
-                Enter your secret PIN to review team applications and publish new competitions.
+                Enter your secret password to review team applications, direct inbox messages, and post new competitions.
               </p>
             </div>
 
@@ -203,7 +249,7 @@ export default function AdminDashboard({ isOpen, onClose }: Props) {
                   setError(false);
                 }}
                 placeholder="Enter Admin Password"
-                className="w-full px-4 py-2.5 text-center text-sm font-mono tracking-widest rounded bg-[#fbf8f2] border border-border text-foreground focus:border-neutral-700 transition-colors"
+                className="w-full px-4 py-2.5 text-center text-base sm:text-sm font-mono tracking-widest rounded bg-[#fbf8f2] border border-border text-foreground focus:border-neutral-700 transition-colors"
               />
 
               {error && (
@@ -214,28 +260,29 @@ export default function AdminDashboard({ isOpen, onClose }: Props) {
 
               <button
                 type="submit"
-                className="w-full py-2.5 text-xs font-mono font-medium rounded bg-foreground text-background hover:bg-[#292524] transition-colors shadow-sm"
+                className="w-full py-2.5 text-xs font-mono font-medium rounded bg-foreground text-background hover:bg-[#292524] transition-colors shadow-sm touch-manipulation"
               >
                 Access Admin Dashboard ↗
               </button>
             </form>
           </div>
         ) : (
-          /* Authenticated Admin Workspace */
+          /* AUTHENTICATED ADMIN PANEL */
           <div className="space-y-6">
             
             {/* Header with Tabs */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border/80 pb-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-4">
               <div>
                 <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-accent font-semibold flex items-center gap-1.5">
-                  <Shield className="w-3 h-3" />
-                  ADMIN PORTAL
+                  <Shield className="w-3.5 h-3.5" />
+                  AUTHENTICATED AS RAJ ARYAN
                 </span>
-                <h3 className="text-xl sm:text-2xl font-medium text-foreground">
-                  Team & Hackathon Manager
+                <h3 className="text-xl font-medium tracking-tight text-foreground">
+                  Leadership Control Hub
                 </h3>
               </div>
 
+              {/* Navigation Tabs */}
               <div className="flex flex-wrap items-center gap-2">
                 <button
                   onClick={() => setActiveTab("applications")}
@@ -249,6 +296,18 @@ export default function AdminDashboard({ isOpen, onClose }: Props) {
                 </button>
 
                 <button
+                  onClick={() => setActiveTab("inquiries")}
+                  className={`text-xs font-mono px-3 py-1.5 rounded border transition-colors flex items-center gap-1 ${
+                    activeTab === "inquiries"
+                      ? "bg-foreground text-background border-foreground font-medium"
+                      : "bg-surface border-border text-foreground-muted hover:text-foreground"
+                  }`}
+                >
+                  <MessageCircle className="w-3 h-3" />
+                  <span>Inquiries ({inquiries.length})</span>
+                </button>
+
+                <button
                   onClick={() => setActiveTab("post")}
                   className={`text-xs font-mono px-3 py-1.5 rounded border transition-colors flex items-center gap-1 ${
                     activeTab === "post"
@@ -257,7 +316,7 @@ export default function AdminDashboard({ isOpen, onClose }: Props) {
                   }`}
                 >
                   <Plus className="w-3 h-3" />
-                  <span>Post Opportunity</span>
+                  <span>Post Opp</span>
                 </button>
 
                 <button
@@ -268,7 +327,7 @@ export default function AdminDashboard({ isOpen, onClose }: Props) {
                       : "bg-surface border-border text-foreground-muted hover:text-foreground"
                   }`}
                 >
-                  Live Posts ({opportunities.length})
+                  Posts ({opportunities.length})
                 </button>
               </div>
             </div>
@@ -298,222 +357,265 @@ export default function AdminDashboard({ isOpen, onClose }: Props) {
                   </div>
                 ) : (
                   <div className="space-y-3">
-                    {applications.map((app) => {
-                      const mailSubject = encodeURIComponent(`Welcome to the Team! [${app.opportunityTitle}]`);
-                      const mailBody = encodeURIComponent(
-                        `Hi ${app.applicantName},\n\nI reviewed your profile and application for "${app.opportunityTitle}" as ${app.roleApplied}.\n\nI'd love to have you on the team! Let's connect on WhatsApp/Discord to coordinate our project roadmap.\n\nBest,\nRaj Aryan\nSant Longowal Institute of Engineering & Technology (SLIET)`
-                      );
-                      const emailLink = `mailto:${app.applicantEmail}?subject=${mailSubject}&body=${mailBody}`;
-
-                      return (
-                        <div
-                          key={app.id}
-                          className="p-5 rounded border border-border bg-surface space-y-3 shadow-sm"
-                        >
-                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-border/60 pb-2.5">
-                            <div>
-                              <div className="flex items-center gap-2">
-                                <h4 className="text-base font-medium text-foreground">
-                                  {app.applicantName}
-                                </h4>
-                                <span
-                                  className={`text-[10px] font-mono uppercase px-2 py-0.5 rounded font-medium ${
-                                    app.status === "accepted"
-                                      ? "bg-emerald-100 text-emerald-800 border border-emerald-300"
-                                      : app.status === "rejected"
-                                      ? "bg-rose-100 text-rose-800 border border-rose-300"
-                                      : "bg-amber-100 text-amber-800 border border-amber-300"
-                                  }`}
-                                >
-                                  {app.status}
-                                </span>
-                              </div>
-                              <p className="text-xs text-foreground-muted">
-                                Applied for: <span className="font-medium text-foreground">{app.roleApplied}</span> in <span className="italic">{app.opportunityTitle}</span>
-                              </p>
-                            </div>
-
-                            <div className="flex items-center gap-3 text-xs font-mono text-foreground-subtle">
-                              <span>{app.applicantCollege}</span>
-                              <button
-                                onClick={() => handleDeleteApplication(app.id)}
-                                className="text-foreground-subtle hover:text-red-600 transition-colors p-1"
-                                title="Delete application"
+                    {applications.map((app) => (
+                      <div
+                        key={app.id}
+                        className="p-4 rounded border border-border bg-surface space-y-3 shadow-sm hover:border-neutral-400 transition-colors"
+                      >
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-border/60 pb-2">
+                          <div className="space-y-0.5">
+                            <div className="flex items-center gap-2">
+                              <h4 className="text-sm font-medium text-foreground">
+                                {app.applicantName}
+                              </h4>
+                              <span
+                                className={`text-[10px] font-mono uppercase px-2 py-0.5 rounded border font-medium ${
+                                  app.status === "accepted"
+                                    ? "bg-emerald-50 text-emerald-800 border-emerald-300"
+                                    : app.status === "rejected"
+                                    ? "bg-rose-50 text-rose-800 border-rose-300"
+                                    : "bg-amber-50 text-amber-800 border-amber-300"
+                                }`}
                               >
-                                <Trash2 className="w-3.5 h-3.5" />
-                              </button>
+                                {app.status}
+                              </span>
                             </div>
+                            <p className="text-xs font-mono text-foreground-muted">
+                              Role Applied: <span className="text-foreground font-semibold">{app.roleApplied}</span> ({app.opportunityTitle})
+                            </p>
                           </div>
 
-                          <p className="text-xs sm:text-sm text-foreground bg-surface-subtle p-3 rounded border border-border/60 leading-relaxed font-sans">
-                            &ldquo;{app.message}&rdquo;
-                          </p>
-
-                          <div className="flex flex-wrap items-center justify-between gap-3 pt-1 text-xs font-mono">
-                            {/* Profiles & Contact */}
-                            <div className="flex items-center gap-3">
+                          <div className="flex items-center gap-2">
+                            {app.applicantGithub && (
                               <a
-                                href={emailLink}
-                                className="inline-flex items-center gap-1 text-foreground hover:text-accent font-medium"
-                                title="Send pre-filled welcome email"
+                                href={app.applicantGithub}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="p-1 text-foreground-subtle hover:text-foreground transition-colors"
+                                title="GitHub Profile"
                               >
-                                <Mail className="w-3.5 h-3.5 text-accent" />
-                                <span>{app.applicantEmail}</span>
+                                <Github className="w-4 h-4" />
                               </a>
-                              {app.applicantGithub && (
-                                <a
-                                  href={app.applicantGithub}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="inline-flex items-center gap-1 text-foreground hover:text-accent"
-                                >
-                                  <Github className="w-3.5 h-3.5" />
-                                  <span>GitHub</span>
-                                </a>
-                              )}
-                              {app.applicantLinkedin && (
-                                <a
-                                  href={app.applicantLinkedin}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="inline-flex items-center gap-1 text-foreground hover:text-accent"
-                                >
-                                  <Linkedin className="w-3.5 h-3.5" />
-                                  <span>LinkedIn</span>
-                                </a>
-                              )}
-                            </div>
-
-                            {/* Decision Action Buttons */}
-                            <div className="flex items-center gap-2">
-                              <button
-                                onClick={() => handleUpdateStatus(app.id, "accepted")}
-                                className="px-3 py-1 text-xs font-mono font-medium rounded bg-emerald-800 text-white hover:bg-emerald-900 transition-colors flex items-center gap-1"
+                            )}
+                            {app.applicantLinkedin && (
+                              <a
+                                href={app.applicantLinkedin}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="p-1 text-foreground-subtle hover:text-foreground transition-colors"
+                                title="LinkedIn Profile"
                               >
-                                <CheckCircle2 className="w-3 h-3" />
-                                <span>Accept Member</span>
-                              </button>
-
-                              <button
-                                onClick={() => handleUpdateStatus(app.id, "rejected")}
-                                className="px-3 py-1 text-xs font-mono font-medium rounded bg-surface-subtle border border-border text-foreground hover:bg-rose-100 hover:text-rose-800 transition-colors flex items-center gap-1"
-                              >
-                                <XCircle className="w-3 h-3" />
-                                <span>Reject</span>
-                              </button>
-                            </div>
+                                <Linkedin className="w-4 h-4" />
+                              </a>
+                            )}
                           </div>
                         </div>
-                      );
-                    })}
+
+                        {/* Pitch message */}
+                        {app.message && (
+                          <div className="p-2.5 rounded bg-surface-subtle border border-border/60 text-xs text-foreground leading-relaxed">
+                            <span className="text-[10px] font-mono uppercase text-foreground-subtle block mb-1">
+                              Applicant Pitch:
+                            </span>
+                            &ldquo;{app.message}&rdquo;
+                          </div>
+                        )}
+
+                        {/* Action Buttons */}
+                        <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => handleUpdateStatus(app.id, "accepted")}
+                              className="inline-flex items-center gap-1 px-3 py-1 text-xs font-mono rounded bg-emerald-800 text-white hover:bg-emerald-900 transition-colors shadow-sm"
+                            >
+                              <CheckCircle2 className="w-3.5 h-3.5" />
+                              <span>Accept</span>
+                            </button>
+
+                            <button
+                              onClick={() => handleUpdateStatus(app.id, "rejected")}
+                              className="inline-flex items-center gap-1 px-3 py-1 text-xs font-mono rounded border border-rose-300 text-rose-700 bg-rose-50 hover:bg-rose-100 transition-colors"
+                            >
+                              <XCircle className="w-3.5 h-3.5" />
+                              <span>Reject</span>
+                            </button>
+                          </div>
+
+                          {/* Pre-filled candidate email dispatch */}
+                          <a
+                            href={`mailto:${app.applicantEmail}?subject=${encodeURIComponent(
+                              `Invitation to Team Up — ${app.opportunityTitle} (Raj Aryan Portfolio)`
+                            )}&body=${encodeURIComponent(
+                              `Hi ${app.applicantName},\n\nI reviewed your application for the ${app.roleApplied} role on our team for ${app.opportunityTitle}.\n\nI'd love to connect on WhatsApp / Call to align on our project strategy.\n\nBest,\nRaj Aryan\nSLIET Longowal\nPhone: +91 9288522520`
+                            )}`}
+                            className="inline-flex items-center gap-1 text-xs font-mono text-accent hover:text-foreground underline transition-colors"
+                          >
+                            <Mail className="w-3.5 h-3.5" />
+                            <span>Send Email ({app.applicantEmail})</span>
+                          </a>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 )}
               </div>
             )}
 
-            {/* TAB 2: POST NEW HACKATHON / OPPORTUNITY FORM */}
+            {/* TAB 2: INQUIRIES & DIRECT MESSAGES (FROM NEON DB) */}
+            {activeTab === "inquiries" && (
+              <div className="space-y-4">
+                <span className="text-xs font-mono text-foreground-subtle block">
+                  Direct Messages Received: {inquiries.length}
+                </span>
+
+                {inquiries.length === 0 ? (
+                  <div className="py-12 text-center text-sm font-mono text-foreground-muted bg-surface rounded border border-border">
+                    No direct contact inquiries in database yet.
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {inquiries.map((msg) => (
+                      <div
+                        key={msg.id}
+                        className="p-4 rounded border border-border bg-surface space-y-2.5 shadow-sm"
+                      >
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-border/60 pb-2">
+                          <div>
+                            <h4 className="text-sm font-medium text-foreground">
+                              {msg.name}
+                            </h4>
+                            <span className="text-xs font-mono text-foreground-muted">
+                              {msg.email} · Topic: <span className="text-accent font-medium">{msg.subject}</span>
+                            </span>
+                          </div>
+                          <span className="text-[10px] font-mono text-foreground-subtle">
+                            {new Date(msg.createdAt).toLocaleDateString()}
+                          </span>
+                        </div>
+
+                        <p className="text-xs sm:text-sm text-foreground leading-relaxed bg-surface-subtle p-3 rounded border border-border/60">
+                          {msg.message}
+                        </p>
+
+                        <div className="pt-1 flex justify-end">
+                          <a
+                            href={`mailto:${msg.email}?subject=${encodeURIComponent(
+                              `Re: ${msg.subject} — Raj Aryan`
+                            )}&body=${encodeURIComponent(
+                              `Hi ${msg.name},\n\nThank you for reaching out via my portfolio!\n\nBest regards,\nRaj Aryan\nraj.aryan9242@gmail.com`
+                            )}`}
+                            className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-mono rounded bg-foreground text-background hover:bg-[#292524] transition-colors shadow-sm"
+                          >
+                            <Mail className="w-3.5 h-3.5" />
+                            <span>Reply to {msg.email} ↗</span>
+                          </a>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* TAB 3: POST NEW OPPORTUNITY */}
             {activeTab === "post" && (
-              <div className="space-y-4 bg-surface p-6 rounded border border-border">
+              <div className="space-y-4">
                 {oppPublished ? (
-                  <div className="py-8 text-center space-y-3">
+                  <div className="py-12 text-center space-y-2">
                     <CheckCircle2 className="w-10 h-10 text-accent mx-auto" />
                     <h4 className="text-base font-medium text-foreground">
-                      Opportunity Published!
+                      Opportunity Broadcasted Live!
                     </h4>
                     <p className="text-xs text-foreground-muted">
-                      Your hackathon/team post is now live on your portfolio for visitors to apply.
+                      Your new competition post is now visible to all website visitors.
                     </p>
                   </div>
                 ) : (
-                  <form onSubmit={handlePublishOpportunity} className="space-y-4">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <form onSubmit={handleCreateOpportunity} className="space-y-3">
+                    <div>
+                      <label className="block text-xs font-mono text-foreground-subtle mb-1">
+                        Competition / Hackathon Title *
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={newOpp.title}
+                        onChange={(e) => setNewOpp({ ...newOpp, title: e.target.value })}
+                        placeholder="e.g. SLIET Robotics Challenge / TechFEST 2026"
+                        className="w-full px-3 py-2 text-base sm:text-sm rounded bg-[#fbf8f2] border border-border text-foreground focus:border-neutral-700"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
                         <label className="block text-xs font-mono text-foreground-subtle mb-1">
-                          Post Title *
+                          Category *
                         </label>
-                        <input
-                          type="text"
-                          required
-                          value={newOpp.title}
-                          onChange={(e) => setNewOpp({ ...newOpp, title: e.target.value })}
-                          placeholder="e.g. techFEST'26 SLIET Project Showcase"
-                          className="w-full px-3 py-2 text-sm rounded bg-[#fbf8f2] border border-border text-foreground focus:border-neutral-700"
-                        />
+                        <select
+                          value={newOpp.type}
+                          onChange={(e) => setNewOpp({ ...newOpp, type: e.target.value as Opportunity["type"] })}
+                          className="w-full px-3 py-2 text-base sm:text-sm rounded bg-[#fbf8f2] border border-border text-foreground"
+                        >
+                          <option value="hackathon">Hackathon</option>
+                          <option value="competition">Competition</option>
+                          <option value="research">Research Project</option>
+                          <option value="opensource">Open Source Build</option>
+                        </select>
                       </div>
 
                       <div>
                         <label className="block text-xs font-mono text-foreground-subtle mb-1">
-                          Opportunity Type *
+                          Deadline / Event Date
                         </label>
-                        <select
-                          value={newOpp.type}
-                          onChange={(e) =>
-                            setNewOpp({ ...newOpp, type: e.target.value as Opportunity["type"] })
-                          }
-                          className="w-full px-3 py-2 text-sm rounded bg-[#fbf8f2] border border-border text-foreground focus:border-neutral-700 font-sans"
-                        >
-                          <option value="competition">🔬 National / Campus Technical Fest</option>
-                          <option value="hackathon">🏆 National Hackathon (SIH, etc.)</option>
-                          <option value="opensource">🛠️ Open-Source Project Team</option>
-                          <option value="research">💡 Research & Embedded Systems</option>
-                        </select>
+                        <input
+                          type="text"
+                          value={newOpp.deadline}
+                          onChange={(e) => setNewOpp({ ...newOpp, deadline: e.target.value })}
+                          placeholder="e.g. March 15, 2026"
+                          className="w-full px-3 py-2 text-base sm:text-sm rounded bg-[#fbf8f2] border border-border text-foreground"
+                        />
                       </div>
                     </div>
 
                     <div>
                       <label className="block text-xs font-mono text-foreground-subtle mb-1">
-                        Roles Needed (comma separated) *
+                        Roles Needed (comma-separated) *
                       </label>
                       <input
                         type="text"
                         required
                         value={newOpp.rolesNeeded}
                         onChange={(e) => setNewOpp({ ...newOpp, rolesNeeded: e.target.value })}
-                        placeholder="e.g. Embedded Developer, Next.js Frontend, Project Presenter"
-                        className="w-full px-3 py-2 text-sm rounded bg-[#fbf8f2] border border-border text-foreground focus:border-neutral-700"
+                        placeholder="e.g. Embedded Hardware Dev, Next.js Frontend, Video Editor"
+                        className="w-full px-3 py-2 text-base sm:text-sm rounded bg-[#fbf8f2] border border-border text-foreground"
                       />
                     </div>
 
                     <div>
                       <label className="block text-xs font-mono text-foreground-subtle mb-1">
-                        Description & Objective *
+                        Description & Problem Statement *
                       </label>
                       <textarea
                         required
                         rows={3}
                         value={newOpp.description}
                         onChange={(e) => setNewOpp({ ...newOpp, description: e.target.value })}
-                        placeholder="Describe the problem statement, technology stack, and what the team will build..."
-                        className="w-full px-3 py-2 text-sm rounded bg-[#fbf8f2] border border-border text-foreground focus:border-neutral-700 resize-y"
+                        placeholder="Explain what the project involves, the objective, and what tech stack is preferred..."
+                        className="w-full px-3 py-2 text-base sm:text-sm rounded bg-[#fbf8f2] border border-border text-foreground"
                       />
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-xs font-mono text-foreground-subtle mb-1">
-                          Deadline / Target Date
-                        </label>
-                        <input
-                          type="text"
-                          value={newOpp.deadline}
-                          onChange={(e) => setNewOpp({ ...newOpp, deadline: e.target.value })}
-                          placeholder="e.g. Active / Registrations Open"
-                          className="w-full px-3 py-2 text-sm rounded bg-[#fbf8f2] border border-border text-foreground focus:border-neutral-700"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-xs font-mono text-foreground-subtle mb-1">
-                          Official Event Website Link
-                        </label>
-                        <input
-                          type="url"
-                          value={newOpp.externalLink}
-                          onChange={(e) => setNewOpp({ ...newOpp, externalLink: e.target.value })}
-                          placeholder="https://www.techfest26.com/"
-                          className="w-full px-3 py-2 text-sm rounded bg-[#fbf8f2] border border-border text-foreground focus:border-neutral-700"
-                        />
-                      </div>
+                    <div>
+                      <label className="block text-xs font-mono text-foreground-subtle mb-1">
+                        Official Website / Guidelines Link
+                      </label>
+                      <input
+                        type="url"
+                        value={newOpp.externalLink}
+                        onChange={(e) => setNewOpp({ ...newOpp, externalLink: e.target.value })}
+                        placeholder="https://..."
+                        className="w-full px-3 py-2 text-base sm:text-sm rounded bg-[#fbf8f2] border border-border text-foreground"
+                      />
                     </div>
 
                     <button
@@ -528,7 +630,7 @@ export default function AdminDashboard({ isOpen, onClose }: Props) {
               </div>
             )}
 
-            {/* TAB 3: MANAGE LIVE POSTS */}
+            {/* TAB 4: MANAGE LIVE POSTS */}
             {activeTab === "manage" && (
               <div className="space-y-3">
                 {opportunities.map((opp) => (

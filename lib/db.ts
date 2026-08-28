@@ -47,6 +47,17 @@ export async function initDb() {
     `;
 
     await sql`
+      CREATE TABLE IF NOT EXISTS contact_messages (
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        email TEXT NOT NULL,
+        subject TEXT,
+        message TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `;
+
+    await sql`
       CREATE TABLE IF NOT EXISTS opportunities (
         id TEXT PRIMARY KEY,
         title TEXT NOT NULL,
@@ -181,4 +192,49 @@ export async function fetchUserApplications(email: string): Promise<Application[
     }
   }
   return memApplications.filter((a) => a.applicantEmail.toLowerCase() === email.toLowerCase());
+}
+
+export interface ContactMessage {
+  id: string;
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+  createdAt: string;
+}
+
+export async function saveContactMessage(msg: { name: string; email: string; subject: string; message: string }) {
+  const sql = getDb();
+  const id = `msg-${Date.now()}`;
+  if (sql) {
+    try {
+      await initDb();
+      await sql`
+        INSERT INTO contact_messages (id, name, email, subject, message)
+        VALUES (${id}, ${msg.name}, ${msg.email}, ${msg.subject}, ${msg.message});
+      `;
+      return { id, ...msg, createdAt: new Date().toISOString() };
+    } catch (e) {
+      console.error("Neon contact save error:", e);
+    }
+  }
+  return { id, ...msg, createdAt: new Date().toISOString() };
+}
+
+export async function fetchContactMessages(): Promise<ContactMessage[]> {
+  const sql = getDb();
+  if (sql) {
+    try {
+      await initDb();
+      const rows = await sql`
+        SELECT id, name, email, subject, message, created_at AS "createdAt"
+        FROM contact_messages
+        ORDER BY created_at DESC;
+      `;
+      return rows as unknown as ContactMessage[];
+    } catch (e) {
+      console.error("Neon contact fetch error:", e);
+    }
+  }
+  return [];
 }

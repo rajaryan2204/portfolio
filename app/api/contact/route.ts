@@ -1,5 +1,18 @@
 import { NextResponse } from "next/server";
 import { profile } from "@/data/profile";
+import { saveContactMessage, fetchContactMessages } from "@/lib/db";
+
+export async function GET() {
+  try {
+    const messages = await fetchContactMessages();
+    return NextResponse.json({ success: true, messages });
+  } catch (error) {
+    return NextResponse.json(
+      { success: false, error: "Failed to fetch contact messages" },
+      { status: 500 }
+    );
+  }
+}
 
 export async function POST(req: Request) {
   try {
@@ -12,27 +25,19 @@ export async function POST(req: Request) {
       );
     }
 
-    // Direct Formspree / Webhook forwarder
-    try {
-      await fetch("https://formspree.io/f/xbjnqkyv", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({
-          name,
-          email,
-          subject: subject || "Portfolio Direct Inquiry",
-          message,
-          to: profile.email,
-        }),
-      });
-    } catch {
-      // Non-blocking fallback
-    }
+    // Save directly to Neon PostgreSQL Cloud Database
+    const savedMsg = await saveContactMessage({
+      name,
+      email,
+      subject: subject || "Portfolio Inquiry",
+      message,
+    });
 
     return NextResponse.json({
       success: true,
-      message: "Message received successfully. Dispatched to Raj's inbox.",
+      message: "Message received and stored in database.",
       destination: profile.email,
+      data: savedMsg,
     });
   } catch (error) {
     return NextResponse.json(

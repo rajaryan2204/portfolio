@@ -19,28 +19,21 @@ export default function Contact() {
     setSubmitting(true);
 
     try {
-      // Send directly via Formspree public endpoint for raj.aryan9242@gmail.com
-      const res = await fetch("https://formspree.io/f/xbjnqkyv", {
+      // 1. Save permanently to Neon PostgreSQL Cloud Database
+      await fetch("/api/contact", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Accept: "application/json",
         },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          subject: formData.subject,
-          message: formData.message,
-          _replyto: formData.email,
-        }),
+        body: JSON.stringify(formData),
       });
 
-      if (res.ok) {
-        setSubmitted(true);
-      } else {
-        // Fallback: still mark submitted and provide direct Gmail dispatch
-        setSubmitted(true);
+      // 2. Open Gmail client pre-filled
+      if (typeof window !== "undefined") {
+        window.open(mailtoLink, "_blank");
       }
+
+      setSubmitted(true);
     } catch {
       setSubmitted(true);
     } finally {
