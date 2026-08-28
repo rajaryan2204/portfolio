@@ -6,7 +6,6 @@ import Projects from "./components/Projects";
 import Certifications from "./components/Certifications";
 import Currently from "./components/Currently";
 import Journey from "./components/Journey";
-import Blog from "./components/Blog";
 import Collaborate from "./components/Collaborate";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
@@ -23,7 +22,6 @@ export default function Home() {
         <Certifications />
         <Currently />
         <Journey />
-        <Blog />
         <Collaborate />
         <Contact />
       </main>
