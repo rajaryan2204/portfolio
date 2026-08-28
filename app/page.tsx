@@ -1,9 +1,9 @@
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import About from "./components/About";
+import Certifications from "./components/Certifications";
 import Skills from "./components/Skills";
 import Projects from "./components/Projects";
-import Certifications from "./components/Certifications";
 import Currently from "./components/Currently";
 import Journey from "./components/Journey";
 import Collaborate from "./components/Collaborate";
@@ -17,9 +17,9 @@ export default function Home() {
       <main className="flex-grow">
         <Hero />
         <About />
+        <Certifications />
         <Skills />
         <Projects />
-        <Certifications />
         <Currently />
         <Journey />
         <Collaborate />

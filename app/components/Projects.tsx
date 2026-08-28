@@ -5,19 +5,19 @@ import {
   ArrowUpRight,
   Star,
   GitFork,
-  Archive,
   GitBranch,
   Loader2,
   Github,
   Sparkles,
   Globe,
   ExternalLink,
-  Laptop,
   Eye,
   Smartphone,
   Mic,
-  Sliders,
-  Cpu
+  Terminal,
+  Activity,
+  CheckCircle2,
+  Monitor
 } from "lucide-react";
 import { profile } from "@/data/profile";
 import { GitHubRepository, getGitHubRepositories } from "@/lib/github";
@@ -26,27 +26,15 @@ import { FadeIn, StaggerContainer, StaggerItem, SmoothCard } from "./MotionWrapp
 const FILTERS = ["All", "TypeScript", "Python", "JavaScript", "C++", "Other"] as const;
 type FilterType = (typeof FILTERS)[number];
 
-// Core Featured Projects with curated details
+// Core Featured Projects with curated details and UI preview banners
 const CORE_FEATURED_PROJECTS = [
-  {
-    id: "slietvoice",
-    title: "SLIET Voice (CampusVoice)",
-    badge: "Campus Platform",
-    badgeIcon: Globe,
-    subtitle: "TypeScript · Next.js · Prisma · PostgreSQL",
-    description:
-      "Full-stack campus portal and voice-integrated student feedback platform engineered for SLIET college grievance management, anonymous reporting, and live campus polling.",
-    highlights: ["Role-based grievance flow", "Anonymous reporting", "Live campus polls", "Verified news board"],
-    liveUrl: "https://slietvoice.vercel.app",
-    githubUrl: "https://github.com/rajaryan2204/slietvoice",
-    lang: "TypeScript",
-  },
   {
     id: "interviewx-ai",
     title: "InterviewX AI",
     badge: "AI Mock Platform",
     badgeIcon: Sparkles,
     subtitle: "TypeScript · Next.js · Speech AI",
+    previewType: "ai-interview",
     description:
       "AI-driven technical mock interview platform featuring automated question synthesis, real-time speech evaluation, and comprehensive skill assessment analytics.",
     highlights: ["AI mock assessments", "Real-time speech analysis", "Skill scoring matrix", "Next.js & TypeScript"],
@@ -55,11 +43,26 @@ const CORE_FEATURED_PROJECTS = [
     lang: "TypeScript",
   },
   {
+    id: "slietvoice",
+    title: "SLIET Voice (CampusVoice)",
+    badge: "Campus Platform",
+    badgeIcon: Globe,
+    subtitle: "TypeScript · Next.js · Prisma · PostgreSQL",
+    previewType: "campus-portal",
+    description:
+      "Full-stack campus portal and voice-integrated student feedback platform engineered for SLIET college grievance management, anonymous reporting, and live campus polling.",
+    highlights: ["Role-based grievance flow", "Anonymous reporting", "Live campus polls", "Verified news board"],
+    liveUrl: "https://slietvoice.vercel.app",
+    githubUrl: "https://github.com/rajaryan2204/slietvoice",
+    lang: "TypeScript",
+  },
+  {
     id: "VisionX",
     title: "VisionX",
     badge: "Computer Vision",
     badgeIcon: Eye,
     subtitle: "Python · PyQt6 · OpenCV · YOLOv8",
+    previewType: "computer-vision",
     description:
       "Desktop AI computer vision assistant built for real-time object tracking, multi-region screen bounding, and automated visual triggers with sub-30ms inference.",
     highlights: ["YOLOv8 real-time detection", "PyQt6 desktop UI", "OpenCV video processing", "Task automation"],
@@ -73,6 +76,7 @@ const CORE_FEATURED_PROJECTS = [
     badge: "Cross-Device Sync",
     badgeIcon: Smartphone,
     subtitle: "TypeScript · Android · macOS",
+    previewType: "device-sync",
     description:
       "Cross-device ecosystem application connecting Android and macOS for instantaneous bi-directional clipboard sync, remote screen lock, and system volume control.",
     highlights: ["Sub-50ms clipboard sync", "Android + macOS ecosystem", "Remote lock trigger", "Local network security"],
@@ -86,6 +90,7 @@ const CORE_FEATURED_PROJECTS = [
     badge: "AI Voice Assistant",
     badgeIcon: Mic,
     subtitle: "Python · SpeechRecognition · Automation",
+    previewType: "voice-assistant",
     description:
       "Custom AI voice assistant in Python for system task automation, speech recognition, desktop audio processing, and automated script execution.",
     highlights: ["Voice command parser", "Speech synthesis", "Desktop automation", "Python AI backend"],
@@ -168,23 +173,47 @@ export default function Projects() {
             <div className="flex items-center gap-3">
               <span className="text-xs font-mono text-foreground-subtle flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
-                <span>GitHub Synced</span>
+                <span>GitHub Synced ({repositories.length > 0 ? repositories.length : 7} Repos)</span>
               </span>
             </div>
           </div>
         </FadeIn>
 
-        {/* Core Featured Projects Grid (VisionX, SyncBridge, RajJarvis, SLIET Voice, InterviewX) */}
+        {/* 5 Core Featured Projects Grid (InterviewX AI, SLIET Voice, VisionX, SyncBridge, RajJarvis) */}
         <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {CORE_FEATURED_PROJECTS.map((proj) => {
             const BadgeIcon = proj.badgeIcon;
             return (
               <StaggerItem key={proj.id}>
-                <SmoothCard className="p-6 rounded border border-border bg-surface hover:bg-[#fbf8f2] hover:border-neutral-400 transition-all duration-200 flex flex-col justify-between space-y-4 shadow-sm group h-full">
-                  <div className="space-y-2.5">
+                <SmoothCard className="p-5 sm:p-6 rounded border border-border bg-surface hover:bg-[#fbf8f2] hover:border-neutral-400 transition-all duration-200 flex flex-col justify-between space-y-4 shadow-sm group h-full">
+                  <div className="space-y-3">
                     
-                    {/* Top Row: Badge & Language */}
-                    <div className="flex items-center justify-between">
+                    {/* Visual UI Preview Banner */}
+                    <div className="h-28 rounded bg-surface-subtle border border-border/70 p-3 flex flex-col justify-between overflow-hidden relative group-hover:border-accent/40 transition-colors">
+                      <div className="flex items-center justify-between text-[10px] font-mono text-foreground-subtle">
+                        <div className="flex items-center gap-1.5">
+                          <div className="w-2 h-2 rounded-full bg-red-400/80" />
+                          <div className="w-2 h-2 rounded-full bg-yellow-400/80" />
+                          <div className="w-2 h-2 rounded-full bg-green-400/80" />
+                          <span className="ml-1 font-semibold text-foreground/80">{proj.id}.app</span>
+                        </div>
+                        <span className="text-accent uppercase tracking-wider font-semibold">{proj.lang}</span>
+                      </div>
+
+                      {/* Mock UI state inside banner */}
+                      <div className="flex items-center justify-between text-xs font-mono text-foreground">
+                        <div className="flex items-center gap-2">
+                          <BadgeIcon className="w-4 h-4 text-accent" />
+                          <span className="font-semibold text-xs truncate max-w-[170px]">{proj.title}</span>
+                        </div>
+                        <span className="text-[10px] px-2 py-0.5 rounded bg-surface border border-border text-foreground-muted">
+                          Active v1.0
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Top Row: Badge & Subtitle */}
+                    <div className="flex items-center justify-between pt-1">
                       <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-accent font-semibold flex items-center gap-1.5 bg-accent/10 px-2 py-0.5 rounded">
                         <BadgeIcon className="w-3 h-3" />
                         {proj.badge}
@@ -260,16 +289,21 @@ export default function Projects() {
         {/* All Open Source Repositories Section */}
         <div className="pt-8 space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 border-b border-border/60 pb-3">
-            <h3 className="text-lg font-medium text-foreground tracking-tight">
-              All Public Repositories ({repositories.length > 0 ? repositories.length : 6})
-            </h3>
+            <div>
+              <h3 className="text-lg font-medium text-foreground tracking-tight">
+                All Public Repositories ({repositories.length > 0 ? repositories.length : 7})
+              </h3>
+              <p className="text-xs text-foreground-muted">
+                Live repositories synchronized with GitHub API
+              </p>
+            </div>
             <span className="text-xs font-mono text-foreground-subtle">
               github.com/{profile.username}
             </span>
           </div>
 
           {/* Filter Tabs */}
-          {repositories.length > 0 && (
+          {!loading && repositories.length > 0 && (
             <div className="flex flex-wrap items-center gap-2">
               <span className="text-xs font-mono text-foreground-subtle mr-2">Filter:</span>
               {FILTERS.map((filter) => {
@@ -292,55 +326,77 @@ export default function Projects() {
             </div>
           )}
 
+          {/* Loading Skeleton (Smooth & Zero Stall) */}
+          {loading && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {[1, 2, 3, 4, 5, 6].map((sk) => (
+                <div
+                  key={sk}
+                  className="p-4 rounded border border-border bg-surface animate-pulse space-y-3"
+                >
+                  <div className="h-4 bg-surface-subtle rounded w-2/3" />
+                  <div className="h-3 bg-surface-subtle rounded w-full" />
+                  <div className="h-3 bg-surface-subtle rounded w-4/5" />
+                  <div className="pt-2 flex justify-between">
+                    <div className="h-3 bg-surface-subtle rounded w-1/4" />
+                    <div className="h-3 bg-surface-subtle rounded w-1/4" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
           {/* Repositories Grid */}
-          <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredRepositories.map((repo) => (
-              <StaggerItem key={repo.id}>
-                <SmoothCard className="p-4 rounded border border-border bg-surface hover:bg-[#fbf8f2] hover:border-neutral-400 transition-all duration-150 flex flex-col justify-between space-y-3 shadow-sm h-full group">
-                  <div className="space-y-1.5">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-1.5">
-                        <GitBranch className="w-3.5 h-3.5 text-accent" />
-                        <span className="text-sm font-mono font-medium text-foreground group-hover:text-accent transition-colors truncate max-w-[170px]">
-                          {repo.name}
+          {!loading && (
+            <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {filteredRepositories.map((repo) => (
+                <StaggerItem key={repo.id}>
+                  <SmoothCard className="p-4 rounded border border-border bg-surface hover:bg-[#fbf8f2] hover:border-neutral-400 transition-all duration-150 flex flex-col justify-between space-y-3 shadow-sm h-full group">
+                    <div className="space-y-1.5">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-1.5">
+                          <GitBranch className="w-3.5 h-3.5 text-accent" />
+                          <span className="text-sm font-mono font-medium text-foreground group-hover:text-accent transition-colors truncate max-w-[170px]">
+                            {repo.name}
+                          </span>
+                        </div>
+                        <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-surface-subtle border border-border text-foreground-subtle">
+                          {repo.language || "Code"}
                         </span>
                       </div>
-                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-surface-subtle border border-border text-foreground-subtle">
-                        {repo.language || "Code"}
-                      </span>
+
+                      <p className="text-xs text-foreground-muted leading-relaxed line-clamp-2">
+                        {repo.description || "Public software repository by Raj Aryan."}
+                      </p>
                     </div>
 
-                    <p className="text-xs text-foreground-muted leading-relaxed line-clamp-2">
-                      {repo.description || "Public software repository by Raj Aryan."}
-                    </p>
-                  </div>
+                    <div className="pt-2 flex items-center justify-between text-xs font-mono text-foreground-subtle border-t border-border/50">
+                      <div className="flex items-center gap-3">
+                        <span className="flex items-center gap-1">
+                          <Star className="w-3 h-3 text-accent" />
+                          <span>{repo.stargazers_count}</span>
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <GitFork className="w-3 h-3" />
+                          <span>{repo.forks_count}</span>
+                        </span>
+                      </div>
 
-                  <div className="pt-2 flex items-center justify-between text-xs font-mono text-foreground-subtle border-t border-border/50">
-                    <div className="flex items-center gap-3">
-                      <span className="flex items-center gap-1">
-                        <Star className="w-3 h-3 text-accent" />
-                        <span>{repo.stargazers_count}</span>
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <GitFork className="w-3 h-3" />
-                        <span>{repo.forks_count}</span>
-                      </span>
+                      <a
+                        href={repo.html_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-foreground-muted hover:text-foreground inline-flex items-center gap-0.5 transition-colors"
+                      >
+                        <span>Code</span>
+                        <ArrowUpRight className="w-3 h-3" />
+                      </a>
                     </div>
-
-                    <a
-                      href={repo.html_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-foreground-muted hover:text-foreground inline-flex items-center gap-0.5 transition-colors"
-                    >
-                      <span>Code</span>
-                      <ArrowUpRight className="w-3 h-3" />
-                    </a>
-                  </div>
-                </SmoothCard>
-              </StaggerItem>
-            ))}
-          </StaggerContainer>
+                  </SmoothCard>
+                </StaggerItem>
+              ))}
+            </StaggerContainer>
+          )}
         </div>
 
       </div>
