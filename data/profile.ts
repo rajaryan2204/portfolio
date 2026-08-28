@@ -68,9 +68,8 @@ export const profile: Profile = {
   // GitHub username connected directly to live API
   username: "rajaryan2204",
 
-  // Contact email & phone
+  // Contact email
   email: "raj.aryan9242@gmail.com",
-  phone: "+91 9288522520",
   location: "India",
   timezone: "IST (UTC+5:30)",
   resumeUrl: "mailto:raj.aryan9242@gmail.com?subject=Resume%20Request%20-%20Raj%20Aryan",

@@ -447,7 +447,7 @@ export default function AdminDashboard({ isOpen, onClose }: Props) {
                             href={`mailto:${app.applicantEmail}?subject=${encodeURIComponent(
                               `Invitation to Team Up — ${app.opportunityTitle} (Raj Aryan Portfolio)`
                             )}&body=${encodeURIComponent(
-                              `Hi ${app.applicantName},\n\nI reviewed your application for the ${app.roleApplied} role on our team for ${app.opportunityTitle}.\n\nI'd love to connect on WhatsApp / Call to align on our project strategy.\n\nBest,\nRaj Aryan\nSLIET Longowal\nPhone: +91 9288522520`
+                              `Hi ${app.applicantName},\n\nI reviewed your application for the ${app.roleApplied} role on our team for ${app.opportunityTitle}.\n\nI'd love to connect with you to align on our project strategy.\n\nBest,\nRaj Aryan\nSLIET Longowal\nEmail: raj.aryan9242@gmail.com`
                             )}`}
                             className="inline-flex items-center gap-1 text-xs font-mono text-accent hover:text-foreground underline transition-colors"
                           >

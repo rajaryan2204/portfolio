@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowUpRight, Github, Linkedin, Mail, Phone, CheckCircle2, ArrowRight, Loader2, Send } from "lucide-react";
+import { ArrowUpRight, Github, Linkedin, Mail, CheckCircle2, ArrowRight, Loader2, Send } from "lucide-react";
 import { profile } from "@/data/profile";
 
 export default function Contact() {
@@ -86,23 +86,6 @@ export default function Contact() {
               </div>
               <ArrowUpRight className="w-4 h-4 text-foreground-subtle group-hover:text-accent group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
             </a>
-
-            {/* Phone Channel */}
-            {profile.phone && (
-              <a
-                href={`tel:${profile.phone.replace(/\s+/g, "")}`}
-                className="p-4 rounded border border-border bg-surface hover:bg-surface-card transition-all duration-150 flex items-center justify-between group shadow-sm"
-              >
-                <div className="flex items-center gap-3">
-                  <Phone className="w-4 h-4 text-accent" />
-                  <div>
-                    <span className="text-xs font-mono text-foreground-subtle block uppercase tracking-wider">Phone / WhatsApp</span>
-                    <span className="text-sm font-mono text-foreground font-medium">{profile.phone}</span>
-                  </div>
-                </div>
-                <ArrowUpRight className="w-4 h-4 text-foreground-subtle group-hover:text-accent group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-              </a>
-            )}
 
             {/* GitHub Channel */}
             <a
