@@ -4,6 +4,8 @@ import { useState } from "react";
 import { ArrowUpRight, Github, Linkedin, Mail, CheckCircle2, ArrowRight, Loader2, Send } from "lucide-react";
 import { profile } from "@/data/profile";
 
+import { FadeIn, SmoothCard } from "./MotionWrapper";
+
 export default function Contact() {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -50,12 +52,12 @@ export default function Contact() {
   return (
     <section
       id="contact"
-      className="py-16 md:py-24 border-t border-border max-w-4xl mx-auto px-6"
+      className="py-16 md:py-24 border-t border-border max-w-4xl mx-auto px-5 sm:px-6"
     >
       <div className="space-y-12">
         
         {/* Section Tag & Giant Editorial Header */}
-        <div className="space-y-3">
+        <FadeIn delay={0.05} className="space-y-3">
           <span className="text-[11px] font-mono font-medium tracking-[0.2em] uppercase text-accent block">
             08 / GET IN TOUCH & CONNECT
           </span>
@@ -65,63 +67,69 @@ export default function Contact() {
           <p className="text-base text-foreground-muted max-w-xl leading-relaxed pt-1">
             Have a project in mind, want to team up for a hackathon, or discuss engineering? All messages arrive directly in my Gmail inbox.
           </p>
-        </div>
+        </FadeIn>
 
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 items-start">
           
           {/* Left: Prominent Direct Contact Channels (6 cols) */}
-          <div className="md:col-span-6 space-y-4">
+          <FadeIn delay={0.15} className="md:col-span-6 space-y-4">
             
             {/* Email Channel */}
-            <a
-              href={`mailto:${profile.email}`}
-              className="p-4 rounded border border-border bg-surface hover:bg-surface-card transition-all duration-150 flex items-center justify-between group shadow-sm"
-            >
-              <div className="flex items-center gap-3">
-                <Mail className="w-4 h-4 text-accent" />
-                <div>
-                  <span className="text-xs font-mono text-foreground-subtle block uppercase tracking-wider">Direct Email</span>
-                  <span className="text-sm font-mono text-foreground font-medium">{profile.email}</span>
+            <SmoothCard>
+              <a
+                href={`mailto:${profile.email}`}
+                className="p-4 rounded border border-border bg-surface hover:bg-[#fbf8f2] hover:border-neutral-400 transition-all duration-150 flex items-center justify-between group shadow-sm block"
+              >
+                <div className="flex items-center gap-3">
+                  <Mail className="w-4 h-4 text-accent" />
+                  <div>
+                    <span className="text-xs font-mono text-foreground-subtle block uppercase tracking-wider">Direct Email</span>
+                    <span className="text-sm font-mono text-foreground font-medium">{profile.email}</span>
+                  </div>
                 </div>
-              </div>
-              <ArrowUpRight className="w-4 h-4 text-foreground-subtle group-hover:text-accent group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-            </a>
+                <ArrowUpRight className="w-4 h-4 text-foreground-subtle group-hover:text-accent group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              </a>
+            </SmoothCard>
 
             {/* GitHub Channel */}
-            <a
-              href={profile.social.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-4 rounded border border-border bg-surface hover:bg-surface-card transition-all duration-150 flex items-center justify-between group shadow-sm"
-            >
-              <div className="flex items-center gap-3">
-                <Github className="w-4 h-4 text-foreground" />
-                <div>
-                  <span className="text-xs font-mono text-foreground-subtle block uppercase tracking-wider">GitHub Profile</span>
-                  <span className="text-sm font-mono text-foreground font-medium">github.com/{profile.username}</span>
+            <SmoothCard>
+              <a
+                href={profile.social.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-4 rounded border border-border bg-surface hover:bg-[#fbf8f2] hover:border-neutral-400 transition-all duration-150 flex items-center justify-between group shadow-sm block"
+              >
+                <div className="flex items-center gap-3">
+                  <Github className="w-4 h-4 text-foreground" />
+                  <div>
+                    <span className="text-xs font-mono text-foreground-subtle block uppercase tracking-wider">GitHub Profile</span>
+                    <span className="text-sm font-mono text-foreground font-medium">github.com/{profile.username}</span>
+                  </div>
                 </div>
-              </div>
-              <ArrowUpRight className="w-4 h-4 text-foreground-subtle group-hover:text-accent group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-            </a>
+                <ArrowUpRight className="w-4 h-4 text-foreground-subtle group-hover:text-accent group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              </a>
+            </SmoothCard>
 
             {/* LinkedIn Channel */}
-            <a
-              href={profile.social.linkedin}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-4 rounded border border-border bg-surface hover:bg-surface-card transition-all duration-150 flex items-center justify-between group shadow-sm"
-            >
-              <div className="flex items-center gap-3">
-                <Linkedin className="w-4 h-4 text-foreground" />
-                <div>
-                  <span className="text-xs font-mono text-foreground-subtle block uppercase tracking-wider">LinkedIn Network</span>
-                  <span className="text-sm font-mono text-foreground font-medium">linkedin.com/in/raj-aryan2204</span>
+            <SmoothCard>
+              <a
+                href={profile.social.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-4 rounded border border-border bg-surface hover:bg-[#fbf8f2] hover:border-neutral-400 transition-all duration-150 flex items-center justify-between group shadow-sm block"
+              >
+                <div className="flex items-center gap-3">
+                  <Linkedin className="w-4 h-4 text-foreground" />
+                  <div>
+                    <span className="text-xs font-mono text-foreground-subtle block uppercase tracking-wider">LinkedIn Network</span>
+                    <span className="text-sm font-mono text-foreground font-medium">linkedin.com/in/raj-aryan2204</span>
+                  </div>
                 </div>
-              </div>
-              <ArrowUpRight className="w-4 h-4 text-foreground-subtle group-hover:text-accent group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-            </a>
+                <ArrowUpRight className="w-4 h-4 text-foreground-subtle group-hover:text-accent group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              </a>
+            </SmoothCard>
 
-          </div>
+          </FadeIn>
 
           {/* Right: Live Interactive Contact Form (6 cols) */}
           <div className="md:col-span-6 md:pl-2">
