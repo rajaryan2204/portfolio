@@ -20,12 +20,12 @@ const VERIFIED_CREDENTIALS = [
     verificationUrl: "https://www.coursera.org/account/accomplishments/specialization/RJUN7JDGNDEV",
   },
   {
-    id: "ice-sliet",
-    title: "Instrumentation & Control Engineering (ICE)",
-    category: "Academic Engineering Credential",
+    id: "sliet-engineering",
+    title: "Engineering Studies — SLIET Longowal",
+    category: "Academic Qualification",
     issuer: "Sant Longowal Institute of Engineering & Technology (SLIET)",
     date: "2026 — Present (1st Year)",
-    credentialId: "SLIET-ICE-2026",
+    credentialId: "SLIET-2026",
     badge: "SLIET Longowal",
     icon: Award,
     description:

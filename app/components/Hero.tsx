@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import {
   ArrowDown,
   ArrowUpRight,
@@ -21,6 +22,7 @@ import { motion } from "framer-motion";
 
 export default function Hero() {
   const [repoCount, setRepoCount] = useState<number>(7);
+  const [imgError, setImgError] = useState(false);
 
   useEffect(() => {
     async function fetchCount() {
@@ -39,8 +41,6 @@ export default function Hero() {
     fetchCount();
   }, []);
 
-  const resumeLink = profile.resumeUrl || `mailto:${profile.email}?subject=Resume%20Request%20-%20Raj%20Aryan`;
-
   return (
     <section
       id="hero"
@@ -55,7 +55,7 @@ export default function Hero() {
           <FadeIn delay={0.05} direction="up">
             <div className="flex items-center gap-2">
               <span className="text-[10px] sm:text-[11px] font-mono font-medium tracking-[0.2em] uppercase text-accent bg-accent/10 px-2.5 py-1 rounded">
-                01 — INSTRUMENTATION & CONTROL ENGG · DEVELOPER
+                01 — SOFTWARE DEVELOPER · ENGINEERING STUDENT
               </span>
             </div>
           </FadeIn>
@@ -135,7 +135,7 @@ export default function Hero() {
             <div className="pt-4 border-t border-border/80 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs font-mono text-foreground-subtle">
               <div className="flex items-center gap-1.5">
                 <GraduationCap className="w-3.5 h-3.5 text-accent" />
-                <span>Diploma ICE · SLIET Longowal</span>
+                <span>Engineering Student · SLIET Longowal</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <MapPin className="w-3.5 h-3.5 text-accent" />
@@ -152,13 +152,20 @@ export default function Hero() {
             
             <SmoothCard className="bg-surface border border-border rounded-lg p-5 sm:p-6 space-y-4 shadow-sm hover:shadow-md transition-all">
               
-              {/* Professional Profile Avatar Header */}
+              {/* Professional Profile Avatar Header with Real Profile Photo */}
               <div className="flex items-center gap-4 border-b border-border/70 pb-4">
-                <div className="w-14 h-14 rounded-full bg-gradient-to-tr from-accent/20 to-emerald-500/20 border-2 border-accent flex items-center justify-center text-foreground font-mono text-xl font-bold shadow-inner relative flex-shrink-0">
-                  <span className="text-accent">
-                    RA
-                  </span>
-                  <div className="absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full bg-accent border-2 border-surface" />
+                <div className="w-16 h-16 rounded-full border-2 border-accent/60 relative overflow-hidden flex-shrink-0 shadow-sm bg-surface-subtle flex items-center justify-center">
+                  {!imgError ? (
+                    <img
+                      src="https://avatars.githubusercontent.com/u/126401415?v=4"
+                      alt="Raj Aryan"
+                      className="w-full h-full object-cover"
+                      onError={() => setImgError(true)}
+                    />
+                  ) : (
+                    <span className="text-accent font-mono text-xl font-bold">RA</span>
+                  )}
+                  <div className="absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full bg-accent border-2 border-surface" title="Active" />
                 </div>
                 
                 <div className="space-y-0.5">
@@ -169,7 +176,7 @@ export default function Hero() {
                     <span className="w-2 h-2 rounded-full bg-accent animate-pulse" title="Active & Building" />
                   </div>
                   <p className="text-xs font-mono text-foreground-muted">
-                    @rajaryan2204 · SLIET ICE &apos;26
+                    @rajaryan2204 · SLIET &apos;26
                   </p>
                 </div>
               </div>
@@ -177,7 +184,7 @@ export default function Hero() {
               {/* Institution */}
               <div className="space-y-1">
                 <span className="text-[10px] font-mono text-foreground-subtle uppercase tracking-wider block">
-                  Institution & Department
+                  Institution & Education
                 </span>
                 <p className="text-xs sm:text-sm font-medium text-foreground">
                   Sant Longowal Institute of Engineering & Technology (SLIET)
@@ -187,10 +194,10 @@ export default function Hero() {
               {/* Discipline */}
               <div className="space-y-1 pt-2 border-t border-border/50">
                 <span className="text-[10px] font-mono text-foreground-subtle uppercase tracking-wider block">
-                  Branch & Studies
+                  Focus
                 </span>
                 <p className="text-xs text-foreground font-mono bg-surface-subtle p-2 rounded border border-border/60">
-                  Instrumentation & Control Engineering (Diploma 1st Year)
+                  Software Engineering & Intelligent Systems
                 </p>
               </div>
 

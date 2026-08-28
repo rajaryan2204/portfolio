@@ -75,13 +75,13 @@ export const profile: Profile = {
   resumeUrl: "/resume",
 
   // Short bio statement for hero
-  bio: "1st year Instrumentation & Control Engineering student at SLIET & developer building intelligent software, desktop tools, and cross-device systems.",
+  bio: "Engineering student at SLIET & software developer building intelligent systems, AI tools, and full-stack platforms.",
 
   // About section narrative
   aboutText: [
-    "I'm a 1st-year Diploma student in Instrumentation and Control Engineering at Sant Longowal Institute of Engineering and Technology (SLIET), joined in 2026. My interest lies at the intersection of engineering hardware, control systems, and practical software engineering.",
-    "Alongside my formal engineering coursework, I actively build real-world software—such as computer vision assistants (VisionX), cross-device tools (SyncBridge), campus platforms (slietvoice), and AI assessment platforms (interviewx-ai).",
-    "I love exploring how low-level systems, signal concepts, and modern programming languages come together to create responsive, intelligent tools."
+    "I'm an engineering student at Sant Longowal Institute of Engineering and Technology (SLIET), joined in 2026. My work centers on building practical software systems, artificial intelligence tools, and modern web applications.",
+    "Alongside my formal engineering coursework, I actively build real-world software—such as computer vision assistants (VisionX), cross-device tools (SyncBridge), campus portals (slietvoice), and AI assessment platforms (interviewx-ai).",
+    "I love exploring how modern programming languages, AI models, and clean system design come together to create responsive, intelligent tools."
   ],
 
   // Academic Education Details

@@ -111,7 +111,7 @@ export default function Navbar() {
           <div className="flex items-center justify-between pb-3 mb-1 border-b border-border/60">
             <div className="flex items-center gap-2 text-xs font-mono text-foreground-muted">
               <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
-              <span>SLIET ICE &apos;26 · Building Daily</span>
+              <span>SLIET &apos;26 · Software Developer</span>
             </div>
 
             <a
