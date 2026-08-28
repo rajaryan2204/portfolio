@@ -270,68 +270,54 @@ export interface BlogPost {
 export const INITIAL_BLOGS: BlogPost[] = [
   {
     id: "blog-1",
-    slug: "bridging-control-systems-and-computer-vision",
-    title: "Bridging Control Systems Instrumentation with Modern AI Computer Vision",
-    excerpt: "Exploring how analog sensor signals, PID control loops, and low-latency computer vision (YOLOv8 & OpenCV) converge in modern engineering systems.",
-    content: `Engineering has always been about measurement, feedback, and deterministic action. In classical instrumentation and control systems, we learn how sensors capture physical phenomena—pressure, temperature, flow, and displacement—and translate them into electrical signals for controllers to maintain stability.
+    slug: "a-day-at-sliet-labs-and-late-night-coding",
+    title: "A Day in SLIET: Balancing ICE Labs, Classes & Late Night Coding",
+    excerpt: "How today went—attending electrical science lectures, working in the instrumentation lab, and unwinding with late-night coding in the hostel room.",
+    content: `Today was one of those days where time just flew by.
 
-### The Shift Toward Visual Feedback
-While traditional transducers measure point data, modern computer vision transforms every pixel in a video feed into a high-dimensional sensor. With models like YOLOv8 running at 60+ FPS on edge devices, visual feedback loops can now guide actuators and robotic arms in real time.
+Woke up around 7:30 AM for morning lectures. The morning session was on electrical circuit laws and signal basics. It's fascinating how simple Kirchhoff's laws and op-amp configurations form the backbone of complex instrumentation systems.
 
-In building **VisionX**, my goal was to bring this visual intelligence directly to the desktop:
-1. **Low Latency Capture**: Streaming video frames via OpenCV with minimal memory copy overhead.
-2. **Real-time Inference**: Processing bounding boxes and tracking regions of interest with high confidence thresholds.
-3. **Control Action**: Triggering automated desktop events and hardware signals based on detected states.
+### In the Lab
+Spent a solid 2 hours in the lab testing circuit breadboards with multimeters and oscilloscopes. There's a different kind of satisfaction when the physical circuit behaves exactly the way the calculation predicted.
 
-The future of instrumentation isn't just about faster ADCs—it's about combining classical control theory with visual intelligence.`,
-    tags: ["Control Systems", "Computer Vision", "Python", "OpenCV"],
-    readTime: "4 min read",
+### Evening & Night
+After classes and evening chai with friends, I sat down in my hostel room to work on my projects. Fixed a few state management bugs and brainstormed some hardware ideas for techFEST'26. 
+
+Late nights here at SLIET have a peaceful vibe—everyone's either grinding on code, talking about projects, or listening to music. Ending the day feeling productive.`,
+    tags: ["Daily Log", "SLIET Life", "Hostel"],
+    readTime: "2 min read",
     author: "Raj Aryan",
-    publishedAt: "2026-02-15T10:00:00.000Z",
+    publishedAt: "2026-02-28T21:00:00.000Z",
   },
   {
     id: "blog-2",
-    slug: "building-sliet-voice-campus-platform",
-    title: "Building SLIET Voice: Architecture of a Student Feedback & Grievance Portal",
-    excerpt: "How we engineered a modern, anonymous grievance escalation and live campus polling system for the SLIET community using Next.js and Prisma.",
-    content: `Campus communities thrive when communication channels between students, class representatives, and administration are clear, structured, and fast.
+    slug: "prepping-for-techfest-2026-and-team-ideas",
+    title: "Prepping for techFEST'26 & Brainstorming Ideas",
+    excerpt: "Campus is buzzing with energy as annual technical fest preparations kick off. Thinking through robotics and full-stack project ideas with classmates.",
+    content: `You can feel the energy on campus shifting—posters for techFEST'26 are going up, and everyone in the department is talking about competitions and workshops.
 
-### The Problem
-Traditional college feedback often gets lost in informal WhatsApp groups or bureaucratic paperwork. Critical infrastructure issues, hostel concerns, and academic queries need a transparent, tracked workflow.
+Spent the afternoon discussing potential hackathon project ideas with a few classmates. We're thinking of building a hardware-software bridge that combines microcontroller sensor telemetry with a clean Next.js live dashboard.
 
-### The Tech Stack & Architecture
-To solve this at SLIET, I developed **SLIET Voice (CampusVoice)**:
-- **Frontend & Serverless Backend**: Next.js App Router with React and Tailwind CSS for a responsive, mobile-first experience.
-- **Database & State**: PostgreSQL with Prisma ORM for type-safe schema migrations and relational grievance queries.
-- **Anonymous & Verified Roles**: Students can raise verified grievances anonymously to encourage honest reporting without hesitation.
-- **Live Campus Polls**: Real-time polling mechanics that aggregate student consensus on campus initiatives.
-
-Building software that directly impacts your own college community is one of the most rewarding parts of being an engineering developer.`,
-    tags: ["Next.js", "TypeScript", "SLIET", "Web Dev"],
-    readTime: "5 min read",
+It's exciting to see how much you learn when you're preparing for a real competition under a deadline. Tomorrow we're setting up the initial hardware components and testing the sensor readouts.`,
+    tags: ["techFEST'26", "Campus Vibe", "Teaming Up"],
+    readTime: "2 min read",
     author: "Raj Aryan",
-    publishedAt: "2026-01-28T14:30:00.000Z",
+    publishedAt: "2026-02-20T19:30:00.000Z",
   },
   {
     id: "blog-3",
-    slug: "engineering-foundations-at-sliet-2026",
-    title: "First Year in Instrumentation & Control: Building Real Software in 2026",
-    excerpt: "Reflecting on starting my diploma at SLIET Longowal, balancing circuit analysis and electronics with full-stack software development.",
-    content: `Joining Sant Longowal Institute of Engineering & Technology (SLIET) in 2026 marked the beginning of my formal engineering journey in Instrumentation and Control.
+    slug: "late-night-reflections-on-growth",
+    title: "Late Night Reflections: How Building Daily Changes Everything",
+    excerpt: "A quiet reflection on consistency, learning from mistakes, and how writing code and studying engineering shapes my daily mindset.",
+    content: `Sometimes you need to take a step back and appreciate how far consistency takes you.
 
-### Theory Meets Code
-One of the biggest advantages of studying Instrumentation is learning the physics behind computation—signal transmission, operational amplifiers, transducers, and digital logic.
+When I first started tinkering with code and microcontrollers, even small syntax errors or faulty wiring felt overwhelming. But showing up every day, writing a few lines of code, and understanding one new concept at a time changes your perspective.
 
-When you write code with an understanding of how hardware processes clock cycles and interrupts, your approach to software architecture changes completely:
-- You write more memory-conscious code.
-- You think deeply about latency and system bottlenecks.
-- You appreciate the elegance of clean protocols, whether it's SPI/I2C for hardware or REST/WebSockets for web servers.
-
-Looking forward to competing in **techFEST'26** and continuing to build projects that bridge hardware and software!`,
-    tags: ["Academics", "SLIET", "Engineering", "Journey"],
+Whether it's debugging a stubborn API route or understanding instrumentation physics, the key is just staying curious and patient. Grateful for the journey so far.`,
+    tags: ["Reflections", "Mindset", "Late Night Thoughts"],
     readTime: "3 min read",
     author: "Raj Aryan",
-    publishedAt: "2026-01-10T09:00:00.000Z",
+    publishedAt: "2026-02-10T23:45:00.000Z",
   },
 ];
 
