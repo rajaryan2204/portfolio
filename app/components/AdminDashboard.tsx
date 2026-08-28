@@ -14,7 +14,8 @@ import {
   Send,
   Trash2,
   Sparkles,
-  Trophy,
+  Download,
+  MessageCircle,
   X
 } from "lucide-react";
 import {
@@ -73,7 +74,6 @@ export default function AdminDashboard({ isOpen, onClose }: Props) {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    // Default secret admin PIN: 2204 or raj2204
     if (pin === "2204" || pin.toLowerCase() === "raj2204" || pin === "admin") {
       setIsAuthenticated(true);
       setError(false);
@@ -143,6 +143,25 @@ export default function AdminDashboard({ isOpen, onClose }: Props) {
     const updated = opportunities.filter((o) => o.id !== oppId);
     setOpportunities(updated);
     saveStoredOpportunities(updated);
+  };
+
+  // Export Applicants to CSV
+  const handleExportCSV = () => {
+    if (applications.length === 0) return;
+
+    const headers = ["Applicant Name,Email,College,Role Applied,Opportunity,Status,GitHub,LinkedIn,Date"];
+    const rows = applications.map((app) =>
+      `"${app.applicantName}","${app.applicantEmail}","${app.applicantCollege}","${app.roleApplied}","${app.opportunityTitle}","${app.status}","${app.applicantGithub}","${app.applicantLinkedin}","${new Date(app.createdAt).toLocaleDateString()}"`
+    );
+
+    const csvContent = "data:text/csv;charset=utf-8," + [headers, ...rows].join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `Raj_Portfolio_Applicants_${new Date().toISOString().slice(0, 10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
@@ -217,7 +236,7 @@ export default function AdminDashboard({ isOpen, onClose }: Props) {
                 </h3>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <button
                   onClick={() => setActiveTab("applications")}
                   className={`text-xs font-mono px-3 py-1.5 rounded border transition-colors ${
@@ -257,107 +276,136 @@ export default function AdminDashboard({ isOpen, onClose }: Props) {
             {/* TAB 1: APPLICATIONS LIST */}
             {activeTab === "applications" && (
               <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-mono text-foreground-subtle">
+                    Total Applicants: {applications.length}
+                  </span>
+
+                  {applications.length > 0 && (
+                    <button
+                      onClick={handleExportCSV}
+                      className="inline-flex items-center gap-1.5 text-xs font-mono px-3 py-1.5 rounded bg-surface border border-border hover:bg-surface-card text-foreground transition-colors shadow-sm"
+                    >
+                      <Download className="w-3.5 h-3.5 text-accent" />
+                      <span>Export CSV</span>
+                    </button>
+                  )}
+                </div>
+
                 {applications.length === 0 ? (
                   <div className="py-12 text-center text-sm font-mono text-foreground-muted bg-surface rounded border border-border">
                     No applicants received yet.
                   </div>
                 ) : (
                   <div className="space-y-3">
-                    {applications.map((app) => (
-                      <div
-                        key={app.id}
-                        className="p-5 rounded border border-border bg-surface space-y-3 shadow-sm"
-                      >
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-border/60 pb-2.5">
-                          <div>
-                            <div className="flex items-center gap-2">
-                              <h4 className="text-base font-medium text-foreground">
-                                {app.applicantName}
-                              </h4>
-                              <span
-                                className={`text-[10px] font-mono uppercase px-2 py-0.5 rounded font-medium ${
-                                  app.status === "accepted"
-                                    ? "bg-emerald-100 text-emerald-800 border border-emerald-300"
-                                    : app.status === "rejected"
-                                    ? "bg-rose-100 text-rose-800 border border-rose-300"
-                                    : "bg-amber-100 text-amber-800 border border-amber-300"
-                                }`}
-                              >
-                                {app.status}
-                              </span>
+                    {applications.map((app) => {
+                      const mailSubject = encodeURIComponent(`Welcome to the Team! [${app.opportunityTitle}]`);
+                      const mailBody = encodeURIComponent(
+                        `Hi ${app.applicantName},\n\nI reviewed your profile and application for "${app.opportunityTitle}" as ${app.roleApplied}.\n\nI'd love to have you on the team! Let's connect on WhatsApp/Discord to coordinate our project roadmap.\n\nBest,\nRaj Aryan\nSant Longowal Institute of Engineering & Technology (SLIET)`
+                      );
+                      const emailLink = `mailto:${app.applicantEmail}?subject=${mailSubject}&body=${mailBody}`;
+
+                      return (
+                        <div
+                          key={app.id}
+                          className="p-5 rounded border border-border bg-surface space-y-3 shadow-sm"
+                        >
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-border/60 pb-2.5">
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <h4 className="text-base font-medium text-foreground">
+                                  {app.applicantName}
+                                </h4>
+                                <span
+                                  className={`text-[10px] font-mono uppercase px-2 py-0.5 rounded font-medium ${
+                                    app.status === "accepted"
+                                      ? "bg-emerald-100 text-emerald-800 border border-emerald-300"
+                                      : app.status === "rejected"
+                                      ? "bg-rose-100 text-rose-800 border border-rose-300"
+                                      : "bg-amber-100 text-amber-800 border border-amber-300"
+                                  }`}
+                                >
+                                  {app.status}
+                                </span>
+                              </div>
+                              <p className="text-xs text-foreground-muted">
+                                Applied for: <span className="font-medium text-foreground">{app.roleApplied}</span> in <span className="italic">{app.opportunityTitle}</span>
+                              </p>
                             </div>
-                            <p className="text-xs text-foreground-muted">
-                              Applied for: <span className="font-medium text-foreground">{app.roleApplied}</span> in <span className="italic">{app.opportunityTitle}</span>
-                            </p>
+
+                            <div className="flex items-center gap-3 text-xs font-mono text-foreground-subtle">
+                              <span>{app.applicantCollege}</span>
+                              <button
+                                onClick={() => handleDeleteApplication(app.id)}
+                                className="text-foreground-subtle hover:text-red-600 transition-colors p-1"
+                                title="Delete application"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
                           </div>
 
-                          <div className="flex items-center gap-3 text-xs font-mono text-foreground-subtle">
-                            <span>{app.applicantCollege}</span>
-                            <button
-                              onClick={() => handleDeleteApplication(app.id)}
-                              className="text-foreground-subtle hover:text-red-600 transition-colors p-1"
-                              title="Delete application"
-                            >
-                              <Trash2 className="w-3.5 h-3.5" />
-                            </button>
+                          <p className="text-xs sm:text-sm text-foreground bg-surface-subtle p-3 rounded border border-border/60 leading-relaxed font-sans">
+                            &ldquo;{app.message}&rdquo;
+                          </p>
+
+                          <div className="flex flex-wrap items-center justify-between gap-3 pt-1 text-xs font-mono">
+                            {/* Profiles & Contact */}
+                            <div className="flex items-center gap-3">
+                              <a
+                                href={emailLink}
+                                className="inline-flex items-center gap-1 text-foreground hover:text-accent font-medium"
+                                title="Send pre-filled welcome email"
+                              >
+                                <Mail className="w-3.5 h-3.5 text-accent" />
+                                <span>{app.applicantEmail}</span>
+                              </a>
+                              {app.applicantGithub && (
+                                <a
+                                  href={app.applicantGithub}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center gap-1 text-foreground hover:text-accent"
+                                >
+                                  <Github className="w-3.5 h-3.5" />
+                                  <span>GitHub</span>
+                                </a>
+                              )}
+                              {app.applicantLinkedin && (
+                                <a
+                                  href={app.applicantLinkedin}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center gap-1 text-foreground hover:text-accent"
+                                >
+                                  <Linkedin className="w-3.5 h-3.5" />
+                                  <span>LinkedIn</span>
+                                </a>
+                              )}
+                            </div>
+
+                            {/* Decision Action Buttons */}
+                            <div className="flex items-center gap-2">
+                              <button
+                                onClick={() => handleUpdateStatus(app.id, "accepted")}
+                                className="px-3 py-1 text-xs font-mono font-medium rounded bg-emerald-800 text-white hover:bg-emerald-900 transition-colors flex items-center gap-1"
+                              >
+                                <CheckCircle2 className="w-3 h-3" />
+                                <span>Accept Member</span>
+                              </button>
+
+                              <button
+                                onClick={() => handleUpdateStatus(app.id, "rejected")}
+                                className="px-3 py-1 text-xs font-mono font-medium rounded bg-surface-subtle border border-border text-foreground hover:bg-rose-100 hover:text-rose-800 transition-colors flex items-center gap-1"
+                              >
+                                <XCircle className="w-3 h-3" />
+                                <span>Reject</span>
+                              </button>
+                            </div>
                           </div>
                         </div>
-
-                        <p className="text-xs sm:text-sm text-foreground bg-surface-subtle p-3 rounded border border-border/60 leading-relaxed font-sans">
-                          &ldquo;{app.message}&rdquo;
-                        </p>
-
-                        <div className="flex flex-wrap items-center justify-between gap-3 pt-1 text-xs font-mono">
-                          {/* Profiles */}
-                          <div className="flex items-center gap-3">
-                            <a
-                              href={`mailto:${app.applicantEmail}`}
-                              className="inline-flex items-center gap-1 text-foreground hover:text-accent"
-                            >
-                              <Mail className="w-3.5 h-3.5 text-accent" />
-                              <span>{app.applicantEmail}</span>
-                            </a>
-                            <a
-                              href={app.applicantGithub}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1 text-foreground hover:text-accent"
-                            >
-                              <Github className="w-3.5 h-3.5" />
-                              <span>GitHub</span>
-                            </a>
-                            <a
-                              href={app.applicantLinkedin}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1 text-foreground hover:text-accent"
-                            >
-                              <Linkedin className="w-3.5 h-3.5" />
-                              <span>LinkedIn</span>
-                            </a>
-                          </div>
-
-                          {/* Decision Action Buttons */}
-                          <div className="flex items-center gap-2">
-                            <button
-                              onClick={() => handleUpdateStatus(app.id, "accepted")}
-                              className="px-3 py-1 text-xs font-mono font-medium rounded bg-emerald-800 text-white hover:bg-emerald-900 transition-colors flex items-center gap-1"
-                            >
-                              <CheckCircle2 className="w-3 h-3" />
-                              <span>Accept</span>
-                            </button>
-
-                            <button
-                              onClick={() => handleUpdateStatus(app.id, "rejected")}
-                              className="px-3 py-1 text-xs font-mono font-medium rounded bg-surface-subtle border border-border text-foreground hover:bg-rose-100 hover:text-rose-800 transition-colors flex items-center gap-1"
-                            >
-                              <XCircle className="w-3 h-3" />
-                              <span>Reject</span>
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 )}
               </div>
@@ -388,7 +436,7 @@ export default function AdminDashboard({ isOpen, onClose }: Props) {
                           required
                           value={newOpp.title}
                           onChange={(e) => setNewOpp({ ...newOpp, title: e.target.value })}
-                          placeholder="e.g. Smart India Hackathon (SIH 2026)"
+                          placeholder="e.g. techFEST'26 SLIET Project Showcase"
                           className="w-full px-3 py-2 text-sm rounded bg-[#fbf8f2] border border-border text-foreground focus:border-neutral-700"
                         />
                       </div>
@@ -404,10 +452,10 @@ export default function AdminDashboard({ isOpen, onClose }: Props) {
                           }
                           className="w-full px-3 py-2 text-sm rounded bg-[#fbf8f2] border border-border text-foreground focus:border-neutral-700 font-sans"
                         >
-                          <option value="hackathon">🏆 National / Campus Hackathon</option>
+                          <option value="competition">🔬 National / Campus Technical Fest</option>
+                          <option value="hackathon">🏆 National Hackathon (SIH, etc.)</option>
                           <option value="opensource">🛠️ Open-Source Project Team</option>
-                          <option value="competition">🔬 Engineering Competition / IoT</option>
-                          <option value="research">💡 Research & Systems Project</option>
+                          <option value="research">💡 Research & Embedded Systems</option>
                         </select>
                       </div>
                     </div>
@@ -421,7 +469,7 @@ export default function AdminDashboard({ isOpen, onClose }: Props) {
                         required
                         value={newOpp.rolesNeeded}
                         onChange={(e) => setNewOpp({ ...newOpp, rolesNeeded: e.target.value })}
-                        placeholder="e.g. IoT Firmware Dev, UI/UX Designer, Next.js Full-Stack"
+                        placeholder="e.g. Embedded Developer, Next.js Frontend, Project Presenter"
                         className="w-full px-3 py-2 text-sm rounded bg-[#fbf8f2] border border-border text-foreground focus:border-neutral-700"
                       />
                     </div>
@@ -449,20 +497,20 @@ export default function AdminDashboard({ isOpen, onClose }: Props) {
                           type="text"
                           value={newOpp.deadline}
                           onChange={(e) => setNewOpp({ ...newOpp, deadline: e.target.value })}
-                          placeholder="e.g. October 15, 2026"
+                          placeholder="e.g. Active / Registrations Open"
                           className="w-full px-3 py-2 text-sm rounded bg-[#fbf8f2] border border-border text-foreground focus:border-neutral-700"
                         />
                       </div>
 
                       <div>
                         <label className="block text-xs font-mono text-foreground-subtle mb-1">
-                          Team Size & Slots
+                          Official Event Website Link
                         </label>
                         <input
-                          type="text"
-                          value={newOpp.teamSize}
-                          onChange={(e) => setNewOpp({ ...newOpp, teamSize: e.target.value })}
-                          placeholder="e.g. 4 Members (2 Slots Open)"
+                          type="url"
+                          value={newOpp.externalLink}
+                          onChange={(e) => setNewOpp({ ...newOpp, externalLink: e.target.value })}
+                          placeholder="https://www.techfest26.com/"
                           className="w-full px-3 py-2 text-sm rounded bg-[#fbf8f2] border border-border text-foreground focus:border-neutral-700"
                         />
                       </div>
@@ -473,7 +521,7 @@ export default function AdminDashboard({ isOpen, onClose }: Props) {
                       className="w-full py-2.5 text-xs font-mono font-medium rounded bg-foreground text-background hover:bg-[#292524] transition-colors shadow-sm flex items-center justify-center gap-1.5"
                     >
                       <Sparkles className="w-3.5 h-3.5" />
-                      <span>Broadcast Opportunity to Website ↗</span>
+                      <span>Broadcast Opportunity Live ↗</span>
                     </button>
                   </form>
                 )}
@@ -498,7 +546,7 @@ export default function AdminDashboard({ isOpen, onClose }: Props) {
                         </h4>
                       </div>
                       <p className="text-xs text-foreground-muted">
-                        Roles: {opp.rolesNeeded.join(" · ")} | Deadline: {opp.deadline}
+                        Roles: {opp.rolesNeeded.join(" · ")} | Status: <span className="font-semibold">{opp.status}</span>
                       </p>
                     </div>
 
