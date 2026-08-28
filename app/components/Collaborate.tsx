@@ -16,6 +16,8 @@ import {
   Send,
   Loader2,
   Eye,
+  LogOut,
+  Lock,
   X
 } from "lucide-react";
 import { profile } from "@/data/profile";
@@ -24,6 +26,7 @@ import {
   Opportunity,
   Application,
   getStoredUser,
+  saveStoredUser,
   getStoredOpportunities,
   getStoredApplications,
   saveStoredApplications,
@@ -36,7 +39,7 @@ export default function Collaborate() {
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   const [userApplications, setUserApplications] = useState<Application[]>([]);
   const [loadingStatus, setLoadingStatus] = useState(false);
-  const [activeTab, setActiveTab] = useState<"all" | "hackathon" | "competition" | "opensource">("all");
+  const [activeTab, setActiveTab] = useState<"all" | "competition" | "hackathon">("all");
 
   // Modals
   const [authModalOpen, setAuthModalOpen] = useState(false);
@@ -72,7 +75,6 @@ export default function Collaborate() {
         }
       }
     } catch {
-      // Local fallback
       const localApps = getStoredApplications().filter(
         (a) => a.applicantEmail.toLowerCase() === email.toLowerCase()
       );
@@ -80,6 +82,12 @@ export default function Collaborate() {
     } finally {
       setLoadingStatus(false);
     }
+  };
+
+  const handleLogout = () => {
+    saveStoredUser(null);
+    setCurrentUser(null);
+    setUserApplications([]);
   };
 
   const filteredOpportunities = opportunities.filter((opp) => {
@@ -121,14 +129,13 @@ export default function Collaborate() {
     };
 
     try {
-      // POST to Neon PostgreSQL / Serverless API
       await fetch("/api/applications", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newApp),
       });
     } catch {
-      // Fallback to local
+      // Fallback
     }
 
     const existing = getStoredApplications();
@@ -165,9 +172,9 @@ export default function Collaborate() {
 
           <div className="flex flex-wrap items-center gap-2.5">
             {currentUser ? (
-              <div className="flex items-center gap-2 text-xs font-mono text-foreground-muted bg-surface px-3 py-1.5 rounded border border-border">
+              <div className="flex items-center gap-2 text-xs font-mono text-foreground-muted bg-surface px-3 py-1.5 rounded border border-border shadow-sm">
                 <span className="w-2 h-2 rounded-full bg-accent" />
-                <span className="font-medium text-foreground">{currentUser.name.split(" ")[0]}</span>
+                <span className="font-semibold text-foreground">{currentUser.name.split(" ")[0]}</span>
                 
                 {/* View Applications Status Button */}
                 <button
@@ -180,14 +187,40 @@ export default function Collaborate() {
                   <Eye className="w-3 h-3" />
                   <span>My Status ({userApplications.length})</span>
                 </button>
+
+                <button
+                  onClick={handleLogout}
+                  className="text-foreground-subtle hover:text-red-600 transition-colors ml-1 p-0.5"
+                  title="Logout"
+                >
+                  <LogOut className="w-3 h-3" />
+                </button>
               </div>
             ) : (
               <button
                 onClick={() => setAuthModalOpen(true)}
-                className="inline-flex items-center gap-1.5 text-xs font-mono font-medium px-3.5 py-1.5 rounded bg-foreground text-background hover:bg-[#292524] transition-colors shadow-sm"
+                className="inline-flex items-center gap-2 text-xs font-mono font-medium px-4 py-2 rounded bg-foreground text-background hover:bg-[#292524] transition-colors shadow-sm"
               >
-                <UserPlus className="w-3.5 h-3.5" />
-                <span>Sign In / Join Team Network</span>
+                {/* Google Small Icon */}
+                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24">
+                  <path
+                    fill="#4285F4"
+                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                  />
+                  <path
+                    fill="#34A853"
+                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                  />
+                  <path
+                    fill="#FBBC05"
+                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
+                  />
+                  <path
+                    fill="#EA4335"
+                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+                  />
+                </svg>
+                <span>Continue with Google</span>
               </button>
             )}
 
@@ -201,6 +234,32 @@ export default function Collaborate() {
             </button>
           </div>
         </div>
+
+        {/* Not Logged In Notice Banner */}
+        {!currentUser && (
+          <div className="p-4 rounded-lg bg-surface border border-border flex items-center justify-between gap-4 shadow-sm">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded bg-surface-subtle border border-border/80 text-accent">
+                <Lock className="w-4 h-4" />
+              </div>
+              <div>
+                <h4 className="text-xs font-semibold text-foreground font-mono">
+                  Authentication Required to Apply
+                </h4>
+                <p className="text-xs text-foreground-muted">
+                  Please sign in with Google first. Once signed in, you can apply for open team slots and track real-time status.
+                </p>
+              </div>
+            </div>
+
+            <button
+              onClick={() => setAuthModalOpen(true)}
+              className="text-xs font-mono font-medium px-3.5 py-1.5 rounded bg-foreground text-background hover:bg-[#292524] transition-colors whitespace-nowrap shadow-sm"
+            >
+              Sign In ↗
+            </button>
+          </div>
+        )}
 
         <p className="text-base text-foreground-muted max-w-2xl leading-relaxed">
           I regularly team up with driven engineering students, developers, and creators for national technical fests, hackathons, and AI builds. Browse open slots below and track your application status in real-time across any device.
@@ -317,13 +376,41 @@ export default function Collaborate() {
                     )}
 
                     {opp.status === "open" ? (
-                      <button
-                        onClick={() => handleOpenApply(opp)}
-                        className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-mono font-medium rounded bg-foreground text-background hover:bg-[#292524] transition-colors shadow-sm"
-                      >
-                        <Send className="w-3 h-3" />
-                        <span>Apply to Team ↗</span>
-                      </button>
+                      currentUser ? (
+                        <button
+                          onClick={() => handleOpenApply(opp)}
+                          className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-mono font-medium rounded bg-foreground text-background hover:bg-[#292524] transition-colors shadow-sm"
+                        >
+                          <Send className="w-3 h-3" />
+                          <span>Apply to Team ↗</span>
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => setAuthModalOpen(true)}
+                          className="inline-flex items-center gap-2 px-4 py-2 text-xs font-mono font-medium rounded bg-foreground text-background hover:bg-[#292524] transition-colors shadow-sm"
+                        >
+                          {/* Google G SVG */}
+                          <svg className="w-3.5 h-3.5" viewBox="0 0 24 24">
+                            <path
+                              fill="#4285F4"
+                              d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                            />
+                            <path
+                              fill="#34A853"
+                              d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                            />
+                            <path
+                              fill="#FBBC05"
+                              d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
+                            />
+                            <path
+                              fill="#EA4335"
+                              d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+                            />
+                          </svg>
+                          <span>Sign In with Google to Apply ↗</span>
+                        </button>
+                      )
                     ) : (
                       <span className="px-3 py-1.5 text-xs font-mono text-foreground-subtle bg-surface-subtle border border-border rounded">
                         Team Full (Closed)
@@ -338,7 +425,7 @@ export default function Collaborate() {
 
       </div>
 
-      {/* Auth / Register Modal with Google option */}
+      {/* Auth / Register Modal with Google First Flow */}
       <CommunityAuthModal
         isOpen={authModalOpen}
         onClose={() => setAuthModalOpen(false)}
@@ -361,7 +448,7 @@ export default function Collaborate() {
         }}
       />
 
-      {/* User Live Applications Status Modal (Across Phone / Laptop) */}
+      {/* User Live Applications Status Modal */}
       {statusModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-150">
           <div className="bg-[#ede8dc] border border-border rounded-lg max-w-lg w-full p-6 sm:p-8 shadow-2xl space-y-6 relative max-h-[90vh] overflow-y-auto">
@@ -459,7 +546,7 @@ export default function Collaborate() {
         </div>
       )}
 
-      {/* Team Application Modal */}
+      {/* Team Application Modal (Only accessible after Google Sign In) */}
       {applyModalOpp && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-150">
           <div className="bg-[#ede8dc] border border-border rounded-lg max-w-lg w-full p-6 sm:p-8 shadow-2xl space-y-6 relative max-h-[90vh] overflow-y-auto">
@@ -477,7 +564,7 @@ export default function Collaborate() {
                   Application Submitted!
                 </h3>
                 <p className="text-xs text-foreground-muted leading-relaxed">
-                  Your application for <span className="font-medium text-foreground">{applyModalOpp.title}</span> has been stored and sent to Raj Aryan. You can check your acceptance status anytime under &quot;My Status&quot;!
+                  Your application for <span className="font-medium text-foreground">{applyModalOpp.title}</span> has been stored in Neon Cloud DB and sent to Raj Aryan. You can check your acceptance status anytime under &quot;My Status&quot;!
                 </p>
               </div>
             ) : (
@@ -490,7 +577,7 @@ export default function Collaborate() {
                     {applyModalOpp.title}
                   </h3>
                   <p className="text-xs text-foreground-muted">
-                    Applying as: <span className="font-medium text-foreground">{currentUser?.name}</span> ({currentUser?.college})
+                    Applying as: <span className="font-medium text-foreground">{currentUser?.name}</span> ({currentUser?.email})
                   </p>
                 </div>
 
@@ -542,7 +629,7 @@ export default function Collaborate() {
                       {submittingApp ? (
                         <>
                           <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                          <span>Submitting...</span>
+                          <span>Submitting to Neon DB...</span>
                         </>
                       ) : (
                         <span>Submit Application ↗</span>
