@@ -220,6 +220,12 @@ export default function ResumePage() {
           </h2>
           <div className="space-y-1.5 pt-1 text-xs leading-relaxed">
             <div className="flex justify-between">
+              <span className="font-semibold text-neutral-900 dark:text-white">Google Prompting Essentials Specialization — Google AI (Coursera: RJUN7JDGNDEV)</span>
+              <a href="https://www.coursera.org/account/accomplishments/specialization/RJUN7JDGNDEV" target="_blank" rel="noopener noreferrer" className="font-mono text-neutral-700 dark:text-neutral-300 underline">
+                Verified Credential ↗
+              </a>
+            </div>
+            <div className="flex justify-between">
               <span className="font-semibold text-neutral-900 dark:text-white">techFEST&apos;26 SLIET — National Annual Technical Fest Participant</span>
               <span className="font-mono text-neutral-500">2026</span>
             </div>
