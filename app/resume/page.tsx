@@ -226,14 +226,6 @@ export default function ResumePage() {
               </a>
             </div>
             <div className="flex justify-between">
-              <span className="font-semibold text-neutral-900 dark:text-white">techFEST&apos;26 SLIET — National Annual Technical Fest Participant</span>
-              <span className="font-mono text-neutral-500">2026</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="font-semibold text-neutral-900 dark:text-white">Smart India Hackathon (SIH 2026) — Team Innovation</span>
-              <span className="font-mono text-neutral-500">2026</span>
-            </div>
-            <div className="flex justify-between">
               <span className="font-semibold text-neutral-900 dark:text-white">LinkedIn Verified Licenses & Certifications</span>
               <a href="https://www.linkedin.com/in/raj-aryan2204/details/certifications/" target="_blank" rel="noopener noreferrer" className="font-mono text-neutral-700 dark:text-neutral-300 underline">
                 Verify on LinkedIn ↗
