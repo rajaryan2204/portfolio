@@ -5,6 +5,7 @@ import Skills from "./components/Skills";
 import Projects from "./components/Projects";
 import Currently from "./components/Currently";
 import Journey from "./components/Journey";
+import Collaborate from "./components/Collaborate";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 
@@ -19,6 +20,7 @@ export default function Home() {
         <Projects />
         <Currently />
         <Journey />
+        <Collaborate />
         <Contact />
       </main>
       <Footer />

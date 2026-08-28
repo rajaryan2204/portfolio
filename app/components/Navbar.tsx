@@ -10,7 +10,8 @@ const navItems = [
   { label: "Skills", href: "#skills" },
   { label: "Projects", href: "#projects" },
   { label: "Currently", href: "#currently" },
-  { label: "Journey", href: "#journey" },
+  { label: "Timeline", href: "#journey" },
+  { label: "Collab", href: "#collaborate" },
   { label: "Contact", href: "#contact" },
 ];
 
@@ -48,14 +49,14 @@ export default function Navbar() {
         </Link>
 
         {/* Center/Right: Availability & Desktop Navigation */}
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden md:flex items-center gap-7">
           {/* Subtle Live Availability Status */}
           <div className="flex items-center gap-2 text-xs font-mono text-foreground-muted bg-surface/80 border border-border px-2.5 py-1 rounded-full">
             <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
-            <span>Available for work</span>
+            <span>Open for collab & work</span>
           </div>
 
-          <nav className="flex items-center gap-6">
+          <nav className="flex items-center gap-5">
             {navItems.map((item) => (
               <a
                 key={item.label}
@@ -83,12 +84,12 @@ export default function Navbar() {
       {/* Mobile Drawer Menu */}
       {isOpen && (
         <nav
-          className="md:hidden border-b border-border bg-[#ede8dc] px-6 py-5 flex flex-col gap-4 animate-in fade-in slide-in-from-top-2 duration-150"
+          className="md:hidden border-b border-border bg-[#ede8dc] px-6 py-5 flex flex-col gap-3 animate-in fade-in slide-in-from-top-2 duration-150"
           aria-label="Mobile Navigation"
         >
           <div className="flex items-center gap-2 text-xs font-mono text-foreground-muted pb-2 border-b border-border/60">
             <span className="w-2 h-2 rounded-full bg-accent" />
-            <span>Available for new opportunities</span>
+            <span>Open for collaborations & teamwork</span>
           </div>
 
           {navItems.map((item) => (
