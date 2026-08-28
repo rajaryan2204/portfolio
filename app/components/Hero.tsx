@@ -60,14 +60,6 @@ export default function Hero() {
               <span>LinkedIn</span>
               <ArrowUpRight className="w-3.5 h-3.5 text-foreground-subtle" />
             </a>
-
-            <a
-              href={profile.resumeUrl}
-              className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded border border-border bg-surface text-foreground text-sm font-medium hover:bg-surface-subtle transition-colors duration-150 shadow-sm"
-            >
-              <span>Get Resume</span>
-              <ArrowUpRight className="w-3.5 h-3.5 text-foreground-subtle" />
-            </a>
           </div>
 
           {/* Editorial Micro Metadata */}
