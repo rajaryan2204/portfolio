@@ -296,7 +296,13 @@ export default function Projects() {
                   repo.language ||
                   "TypeScript";
 
-                const liveUrl = profile.projectLiveUrls[repo.name];
+                const liveUrl =
+                  profile.projectLiveUrls[repo.name] ||
+                  (repo.name.toLowerCase().includes("interviewx")
+                    ? "https://interviewx-ai-one.vercel.app/"
+                    : repo.name.toLowerCase().includes("sliet")
+                    ? "https://slietvoice.vercel.app"
+                    : undefined);
                 const highlights = profile.projectHighlights[repo.name] || [];
 
                 return (
@@ -420,7 +426,13 @@ export default function Projects() {
                   repo.language ||
                   "TypeScript";
 
-                const liveUrl = profile.projectLiveUrls[repo.name];
+                const liveUrl =
+                  profile.projectLiveUrls[repo.name] ||
+                  (repo.name.toLowerCase().includes("interviewx")
+                    ? "https://interviewx-ai-one.vercel.app/"
+                    : repo.name.toLowerCase().includes("sliet")
+                    ? "https://slietvoice.vercel.app"
+                    : undefined);
 
                 return (
                   <article
