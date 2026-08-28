@@ -137,6 +137,7 @@ export default function AdminDashboard({ isOpen, onClose }: Props) {
       teamSize: newOpp.teamSize || "4 Members",
       status: "open",
       externalLink: newOpp.externalLink || undefined,
+      datePosted: new Date().toISOString(),
     };
 
     const updated = [created, ...opportunities];
