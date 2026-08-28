@@ -170,7 +170,7 @@ export const profile: Profile = {
   // Direct Live App / Demo Links for projects
   projectLiveUrls: {
     "slietvoice": "https://slietvoice.vercel.app",
-    "interviewx-ai": "https://interviewx-ai.vercel.app",
+    "interviewx-ai": "https://interviewx-ai-one.vercel.app/",
     "SyncBridge": "https://github.com/rajaryan2204/SyncBridge/releases",
     "VisionX": "https://github.com/rajaryan2204/VisionX",
     "RajJarvis": "https://github.com/rajaryan2204/RajJarvis",

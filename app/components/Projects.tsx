@@ -129,7 +129,7 @@ export default function Projects() {
 
             <div className="pt-2 flex items-center gap-3 border-t border-border/60">
               <a
-                href={profile.projectLiveUrls["interviewx-ai"] || "https://interviewx-ai.vercel.app"}
+                href={profile.projectLiveUrls["interviewx-ai"] || "https://interviewx-ai-one.vercel.app/"}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 text-xs font-mono font-medium text-background bg-foreground px-3 py-1.5 rounded hover:bg-[#292524] transition-colors"
