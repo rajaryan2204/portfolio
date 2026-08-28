@@ -44,6 +44,8 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
+import AuthProvider from "./components/AuthProvider";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -52,7 +54,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="bg-[#ede8dc]">
       <body className="bg-[#ede8dc] text-[#171717] antialiased min-h-screen font-sans">
-        {children}
+        <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
   );

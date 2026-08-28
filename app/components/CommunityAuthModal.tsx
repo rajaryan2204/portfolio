@@ -4,6 +4,8 @@ import { useState } from "react";
 import { X, Github, Linkedin, Mail, GraduationCap, Code2, User, CheckCircle2, Lock } from "lucide-react";
 import { MemberUser, saveStoredUser } from "@/lib/collaborationStore";
 
+import { signIn } from "next-auth/react";
+
 interface Props {
   isOpen: boolean;
   onClose: () => void;
@@ -26,10 +28,15 @@ export default function CommunityAuthModal({ isOpen, onClose, onSuccess }: Props
   if (!isOpen) return null;
 
   // 1-Click Google Sign-In helper
-  const handleGoogleContinue = () => {
+  const handleGoogleContinue = async () => {
     setIsGoogleLoading(true);
+    try {
+      await signIn("google", { redirect: false });
+    } catch {
+      // Fallback
+    }
+
     setTimeout(() => {
-      // Pre-populate with Google Auth data
       const defaultEmail = formData.email || "developer@gmail.com";
       const defaultName = formData.name || "Engineering Student";
       
@@ -41,7 +48,7 @@ export default function CommunityAuthModal({ isOpen, onClose, onSuccess }: Props
       
       setIsGoogleLoading(false);
       setAuthStep("profile_details");
-    }, 700);
+    }, 600);
   };
 
   const handleFinalSubmit = (e: React.FormEvent) => {
