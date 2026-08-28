@@ -66,54 +66,56 @@ export default function Hero() {
           <div className="pt-4 border-t border-border/80 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs font-mono text-foreground-subtle">
             <div className="flex items-center gap-1.5">
               <GraduationCap className="w-3.5 h-3.5 text-accent" />
-              <span>1st Year Diploma (SLIET)</span>
+              <span>Diploma ICE · SLIET Longowal</span>
             </div>
             <div className="flex items-center gap-1.5">
               <MapPin className="w-3.5 h-3.5 text-accent" />
-              <span>Based in {profile.location} ({profile.timezone})</span>
+              <span>{profile.location} ({profile.timezone})</span>
             </div>
           </div>
 
         </div>
 
-        {/* Right Asymmetric Editorial Composition (5 cols) */}
+        {/* Right Academic Summary Card (5 cols) */}
         <div className="md:col-span-5 md:pl-2">
-          <div className="bg-surface border border-border rounded p-5 sm:p-6 space-y-5 shadow-sm">
+          <div className="bg-surface border border-border rounded p-5 sm:p-6 space-y-4 shadow-sm">
             
             {/* Header info */}
             <div className="flex items-center justify-between border-b border-border/70 pb-3">
               <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-foreground-subtle">
-                ACADEMICS & TECH / 2026
+                ACADEMICS & STUDIES / 2026
               </span>
               <span className="w-1.5 h-1.5 rounded-full bg-accent" />
             </div>
 
-            {/* Quote / Philosophy */}
-            <p className="text-xs sm:text-sm font-serif italic text-foreground leading-relaxed">
-              &ldquo;Bridging control systems and hardware instrumentation with modern AI vision and full-stack software.&rdquo;
-            </p>
-
-            {/* Academic Focus Snippet (Pure Academics) */}
-            <div className="space-y-2 pt-2 border-t border-border/50">
-              <div className="text-[10px] sm:text-[11px] font-mono text-foreground-subtle uppercase tracking-wider flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-accent inline-block" />
-                <span>Academic Institution</span>
-              </div>
-              <p className="text-xs text-foreground font-mono bg-surface-subtle p-2.5 rounded border border-border/60">
+            {/* Institution */}
+            <div className="space-y-1">
+              <span className="text-[10px] font-mono text-foreground-subtle uppercase tracking-wider block">
+                Institution
+              </span>
+              <p className="text-sm font-medium text-foreground">
                 Sant Longowal Institute of Engineering & Technology (SLIET)
               </p>
             </div>
 
-            {/* Quick Stats list */}
-            <div className="grid grid-cols-2 gap-3 pt-2 text-xs font-mono border-t border-border/50">
-              <div>
-                <span className="text-foreground-subtle block text-[10px] uppercase tracking-wider">Branch</span>
-                <span className="text-foreground font-medium text-[11px] sm:text-xs">Control & Instrumentation</span>
-              </div>
-              <div>
-                <span className="text-foreground-subtle block text-[10px] uppercase tracking-wider">GitHub Sync</span>
-                <span className="text-accent font-medium text-[11px] sm:text-xs">6 Public Repos Live</span>
-              </div>
+            {/* Branch */}
+            <div className="space-y-1 pt-2 border-t border-border/50">
+              <span className="text-[10px] font-mono text-foreground-subtle uppercase tracking-wider block">
+                Discipline
+              </span>
+              <p className="text-xs text-foreground font-mono bg-surface-subtle p-2 rounded border border-border/60">
+                Instrumentation & Control Engineering (Diploma 1st Year)
+              </p>
+            </div>
+
+            {/* Key Builds */}
+            <div className="space-y-1 pt-2 border-t border-border/50">
+              <span className="text-[10px] font-mono text-foreground-subtle uppercase tracking-wider block">
+                Recent Platforms Built
+              </span>
+              <p className="text-xs text-foreground-muted font-mono">
+                SLIET Voice · InterviewX AI · VisionX
+              </p>
             </div>
 
           </div>
