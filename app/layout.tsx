@@ -7,16 +7,15 @@ const SITE_URL = "https://rajaryan2204.vercel.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: `${profile.displayName} — Instrumentation & Control Engineer · Developer`,
-  description: `Personal portfolio of ${profile.displayName} (SLIET Longowal). Building control systems, computer vision tools, and modern web applications.`,
+  title: `${profile.displayName} — Software Developer & Engineering Student @ SLIET`,
+  description: `Personal portfolio of ${profile.displayName} (SLIET Longowal). Building AI tools, computer vision assistants, and full-stack systems.`,
   keywords: [
     profile.displayName,
     "Raj Aryan",
     "SLIET",
     "SLIET Longowal",
-    "Instrumentation & Control",
-    "Developer",
-    "Software Engineer",
+    "Software Developer",
+    "AI Developer",
     "Computer Vision",
     "VisionX",
     "SyncBridge",
@@ -33,8 +32,8 @@ export const metadata: Metadata = {
     canonical: SITE_URL,
   },
   openGraph: {
-    title: `${profile.displayName} — Developer & Engineering Student`,
-    description: `1st Year Instrumentation & Control Engineering at SLIET Longowal. Developer building intelligent software, desktop tools, and web applications.`,
+    title: `${profile.displayName} — Software Developer & Engineering Student @ SLIET`,
+    description: `Engineering Student at SLIET Longowal & Developer building intelligent software, computer vision assistants, and web platforms.`,
     url: SITE_URL,
     siteName: `${profile.displayName} Portfolio`,
     locale: "en_US",
@@ -42,8 +41,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: `${profile.displayName} — Developer & Engineering Student`,
-    description: `Personal portfolio of ${profile.displayName} (SLIET Longowal). Explore software projects, computer vision tools, and daily logs.`,
+    title: `${profile.displayName} — Software Developer & Engineering Student @ SLIET`,
+    description: `Personal portfolio of ${profile.displayName} (SLIET Longowal). Explore software projects, computer vision tools, and engineering builds.`,
     creator: profile.displayName,
   },
   robots: {

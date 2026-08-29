@@ -4,6 +4,7 @@ import About from "./components/About";
 import Certifications from "./components/Certifications";
 import Skills from "./components/Skills";
 import Projects from "./components/Projects";
+import GithubActivity from "./components/GithubActivity";
 import Journey from "./components/Journey";
 import Collaborate from "./components/Collaborate";
 import Contact from "./components/Contact";
@@ -19,6 +20,7 @@ export default function Home() {
         <Certifications />
         <Skills />
         <Projects />
+        <GithubActivity />
         <Journey />
         <Collaborate />
         <Contact />
