@@ -39,7 +39,7 @@ export default function Certifications() {
           <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4 border-b border-border/80 pb-4">
             <div>
               <span className="text-[11px] font-mono font-medium tracking-[0.2em] uppercase text-accent block">
-                05 / CERTIFICATIONS & CREDENTIALS
+                04 / CERTIFICATIONS & CREDENTIALS
               </span>
               <h2 className="text-2xl sm:text-3xl font-medium tracking-tight text-foreground">
                 Verified Certifications

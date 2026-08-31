@@ -52,14 +52,14 @@ export default function Contact() {
   return (
     <section
       id="contact"
-      className="py-16 md:py-24 border-t border-border max-w-4xl mx-auto px-5 sm:px-6"
+      className="py-16 md:py-24 border-t border-border max-w-4xl mx-auto px-5 sm:px-6 section-glow"
     >
       <div className="space-y-12">
-        
+
         {/* Section Tag & Giant Editorial Header */}
         <FadeIn delay={0.05} className="space-y-3">
           <span className="text-[11px] font-mono font-medium tracking-[0.2em] uppercase text-accent block">
-            08 / GET IN TOUCH & CONNECT
+            10 / GET IN TOUCH & CONNECT
           </span>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight text-foreground leading-[1.1]">
             Let&apos;s make<br />something useful.
@@ -70,15 +70,15 @@ export default function Contact() {
         </FadeIn>
 
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 items-start">
-          
+
           {/* Left: Prominent Direct Contact Channels (6 cols) */}
           <FadeIn delay={0.15} className="md:col-span-6 space-y-4">
-            
+
             {/* Email Channel */}
             <SmoothCard>
               <a
                 href={`mailto:${profile.email}`}
-                className="p-4 rounded border border-border bg-surface hover:bg-[#fbf8f2] hover:border-neutral-400 transition-all duration-150 flex items-center justify-between group shadow-sm block"
+                className="p-4 rounded-lg border border-border bg-surface hover:bg-surface-card hover:border-accent transition-all duration-150 flex items-center justify-between group shadow-sm block"
               >
                 <div className="flex items-center gap-3">
                   <Mail className="w-4 h-4 text-accent" />
@@ -97,7 +97,7 @@ export default function Contact() {
                 href={profile.social.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-4 rounded border border-border bg-surface hover:bg-[#fbf8f2] hover:border-neutral-400 transition-all duration-150 flex items-center justify-between group shadow-sm block"
+                className="p-4 rounded-lg border border-border bg-surface hover:bg-surface-card hover:border-accent transition-all duration-150 flex items-center justify-between group shadow-sm block"
               >
                 <div className="flex items-center gap-3">
                   <Github className="w-4 h-4 text-foreground" />
@@ -116,7 +116,7 @@ export default function Contact() {
                 href={profile.social.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-4 rounded border border-border bg-surface hover:bg-[#fbf8f2] hover:border-neutral-400 transition-all duration-150 flex items-center justify-between group shadow-sm block"
+                className="p-4 rounded-lg border border-border bg-surface hover:bg-surface-card hover:border-accent transition-all duration-150 flex items-center justify-between group shadow-sm block"
               >
                 <div className="flex items-center gap-3">
                   <Linkedin className="w-4 h-4 text-foreground" />
@@ -134,7 +134,7 @@ export default function Contact() {
           {/* Right: Live Interactive Contact Form (6 cols) */}
           <div className="md:col-span-6 md:pl-2">
             {submitted ? (
-              <div className="p-8 rounded border border-border bg-surface text-center space-y-4 shadow-sm">
+              <div className="p-8 rounded-lg border border-border bg-surface text-center space-y-4 shadow-sm">
                 <CheckCircle2 className="w-9 h-9 text-accent mx-auto" />
                 <div className="space-y-2">
                   <h3 className="text-base font-medium text-foreground">
@@ -148,7 +148,7 @@ export default function Contact() {
                 <div className="pt-2 flex flex-col gap-2">
                   <a
                     href={mailtoLink}
-                    className="inline-flex items-center justify-center gap-2 px-4 py-2 text-xs font-mono font-medium rounded bg-foreground text-background hover:bg-[#292524] transition-colors shadow-sm"
+                    className="inline-flex items-center justify-center gap-2 px-4 py-2 text-xs font-mono font-medium rounded bg-foreground text-background hover:bg-foreground-muted transition-colors shadow-sm"
                   >
                     <span>Open Pre-filled in Gmail / Mail Client</span>
                     <ArrowUpRight className="w-3.5 h-3.5" />
@@ -167,7 +167,7 @@ export default function Contact() {
                 </div>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-4 bg-surface p-6 rounded border border-border shadow-sm">
+              <form onSubmit={handleSubmit} className="space-y-4 bg-surface p-6 rounded-lg border border-border shadow-sm">
                 <div className="flex items-center justify-between pb-1 border-b border-border/60">
                   <span className="text-xs font-mono text-foreground-subtle uppercase tracking-wider">
                     Direct Message to Raj
@@ -193,7 +193,7 @@ export default function Contact() {
                     onChange={(e) =>
                       setFormData({ ...formData, name: e.target.value })
                     }
-                    className="w-full px-3 py-2.5 text-base sm:text-sm rounded bg-[#fbf8f2] border border-border text-foreground placeholder:text-neutral-400 focus:border-neutral-600 transition-colors"
+                    className="w-full px-3 py-2.5 text-base sm:text-sm rounded bg-surface-card border border-border text-foreground placeholder:text-foreground-subtle/50 focus:border-accent transition-colors"
                     placeholder="e.g. Alex Sharma"
                   />
                 </div>
@@ -213,7 +213,7 @@ export default function Contact() {
                     onChange={(e) =>
                       setFormData({ ...formData, email: e.target.value })
                     }
-                    className="w-full px-3 py-2.5 text-base sm:text-sm rounded bg-[#fbf8f2] border border-border text-foreground placeholder:text-neutral-400 focus:border-neutral-600 transition-colors"
+                    className="w-full px-3 py-2.5 text-base sm:text-sm rounded bg-surface-card border border-border text-foreground placeholder:text-foreground-subtle/50 focus:border-accent transition-colors"
                     placeholder="alex@example.com"
                   />
                 </div>
@@ -231,7 +231,7 @@ export default function Contact() {
                     onChange={(e) =>
                       setFormData({ ...formData, subject: e.target.value })
                     }
-                    className="w-full px-3 py-2.5 text-base sm:text-sm rounded bg-[#fbf8f2] border border-border text-foreground focus:border-neutral-600 transition-colors font-sans"
+                    className="w-full px-3 py-2.5 text-base sm:text-sm rounded bg-surface-card border border-border text-foreground focus:border-accent transition-colors font-sans"
                   >
                     <option value="Team Collaboration / Hackathon">🤝 Team Collaboration / Hackathon</option>
                     <option value="Open Source / Project Contribution">🛠️ Open Source / Project Contribution</option>
@@ -256,7 +256,7 @@ export default function Contact() {
                     onChange={(e) =>
                       setFormData({ ...formData, message: e.target.value })
                     }
-                    className="w-full px-3 py-2.5 text-base sm:text-sm rounded bg-[#fbf8f2] border border-border text-foreground placeholder:text-neutral-400 focus:border-neutral-600 transition-colors resize-y"
+                    className="w-full px-3 py-2.5 text-base sm:text-sm rounded bg-surface-card border border-border text-foreground placeholder:text-foreground-subtle/50 focus:border-accent transition-colors resize-y"
                     placeholder="Tell me about your project, idea, or team..."
                   />
                 </div>
@@ -264,7 +264,7 @@ export default function Contact() {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-medium rounded bg-foreground text-background hover:bg-[#292524] transition-colors duration-150 shadow-sm disabled:opacity-60"
+                  className="w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-medium rounded bg-foreground text-background hover:bg-foreground-muted transition-colors duration-150 shadow-sm disabled:opacity-60"
                 >
                   {submitting ? (
                     <>

@@ -33,15 +33,15 @@ export default function Currently() {
   return (
     <section
       id="currently"
-      className="py-16 md:py-24 border-t border-border max-w-4xl mx-auto px-5 sm:px-6"
+      className="py-16 md:py-24 border-t border-border max-w-4xl mx-auto px-5 sm:px-6 section-glow"
     >
       <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
-        
+
         {/* Left Header */}
         <div className="md:col-span-4 space-y-1">
           <FadeIn delay={0.05}>
             <span className="text-[11px] font-mono font-medium tracking-[0.2em] uppercase text-accent block">
-              05 / NOW & FOCUS
+              03 / NOW & FOCUS
             </span>
             <h2 className="text-2xl sm:text-3xl font-medium tracking-tight text-foreground">
               Currently
@@ -59,7 +59,7 @@ export default function Currently() {
               const Icon = entry.icon;
               return (
                 <StaggerItem key={idx}>
-                  <SmoothCard className="p-5 rounded border border-border bg-surface hover:bg-[#fbf8f2] hover:border-neutral-400 transition-all duration-200 space-y-2 shadow-sm">
+                  <SmoothCard className="p-5 rounded-xl border border-border bg-surface hover:bg-surface-card hover:border-accent transition-all duration-200 space-y-2 shadow-sm">
                     <div className="flex items-center gap-2 text-xs font-mono text-accent uppercase tracking-wider font-medium">
                       <Icon className="w-3.5 h-3.5 text-accent" />
                       <span>{entry.label}</span>

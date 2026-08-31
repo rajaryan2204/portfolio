@@ -8,9 +8,10 @@ import ThemeToggle from "./ThemeToggle";
 
 const navItems = [
   { label: "About", href: "#about" },
+  { label: "Now", href: "#currently" },
+  { label: "Achievements", href: "#achievements" },
   { label: "Skills", href: "#skills" },
   { label: "Projects", href: "#projects" },
-  { label: "Achievements", href: "#achievements" },
   { label: "Timeline", href: "#journey" },
   { label: "Collab", href: "#collaborate" },
   { label: "Contact", href: "#contact" },

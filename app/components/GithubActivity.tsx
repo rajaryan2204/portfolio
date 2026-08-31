@@ -34,16 +34,16 @@ export default function GithubActivity() {
   return (
     <section
       id="github-activity"
-      className="py-14 sm:py-18 border-t border-border max-w-4xl mx-auto px-5 sm:px-6"
+      className="py-14 sm:py-18 border-t border-border max-w-4xl mx-auto px-5 sm:px-6 section-glow"
     >
       <div className="space-y-8">
-        
+
         {/* Section Header */}
         <FadeIn delay={0.05}>
           <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4 border-b border-border/80 pb-4">
             <div>
               <span className="text-[11px] font-mono font-medium tracking-[0.2em] uppercase text-accent block">
-                04.5 / OPEN SOURCE PULSE
+                07 / OPEN SOURCE PULSE
               </span>
               <h2 className="text-2xl sm:text-3xl font-medium tracking-tight text-foreground">
                 GitHub Activity & Heatmap
@@ -54,7 +54,7 @@ export default function GithubActivity() {
               href={profile.social.github}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded bg-surface border border-border hover:bg-surface-card hover:border-neutral-400 text-foreground text-xs font-mono font-medium transition-colors shadow-sm self-start sm:self-auto"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded bg-surface border border-border hover:bg-surface-card hover:border-accent text-foreground text-xs font-mono font-medium transition-colors shadow-sm self-start sm:self-auto"
             >
               <Github className="w-3.5 h-3.5" />
               <span>@rajaryan2204 ↗</span>
@@ -64,8 +64,8 @@ export default function GithubActivity() {
 
         {/* Contribution Heatmap Card */}
         <FadeIn delay={0.1}>
-          <SmoothCard className="p-6 sm:p-7 rounded-2xl border border-border bg-surface shadow-sm hover:border-neutral-400 transition-all space-y-6">
-            
+          <SmoothCard className="p-6 sm:p-7 rounded-2xl border border-border bg-surface shadow-sm hover:border-accent transition-all space-y-6">
+
             {/* Top Bar: Pulse Badge & Year */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-border/60 pb-4">
               <div className="flex items-center gap-2">
@@ -99,9 +99,9 @@ export default function GithubActivity() {
                 <div className="flex items-center gap-1.5">
                   <span>Less</span>
                   <span className="w-2.5 h-2.5 rounded-sm bg-surface-subtle border border-border" />
-                  <span className="w-2.5 h-2.5 rounded-sm bg-emerald-300" />
-                  <span className="w-2.5 h-2.5 rounded-sm bg-emerald-500" />
-                  <span className="w-2.5 h-2.5 rounded-sm bg-emerald-700" />
+                  <span className="w-2.5 h-2.5 rounded-sm bg-emerald-300 dark:bg-emerald-800" />
+                  <span className="w-2.5 h-2.5 rounded-sm bg-emerald-500 dark:bg-emerald-600" />
+                  <span className="w-2.5 h-2.5 rounded-sm bg-emerald-700 dark:bg-emerald-400" />
                   <span>More</span>
                 </div>
               </div>
@@ -109,7 +109,7 @@ export default function GithubActivity() {
 
             {/* Quick Metrics Grid */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2 border-t border-border/60 text-xs font-mono">
-              
+
               <div className="p-3 rounded-lg bg-surface-subtle border border-border/70 space-y-1">
                 <span className="text-[10px] text-foreground-subtle uppercase tracking-wider block">Repositories</span>
                 <span className="text-lg font-bold text-foreground">{repoCount} Repos</span>

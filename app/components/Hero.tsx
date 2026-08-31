@@ -44,17 +44,20 @@ export default function Hero() {
   return (
     <section
       id="hero"
-      className="pt-8 pb-14 sm:pt-14 sm:pb-18 md:pt-20 md:pb-22 max-w-4xl mx-auto px-5 sm:px-6"
+      className="pt-8 pb-14 sm:pt-14 sm:pb-18 md:pt-20 md:pb-22 max-w-4xl mx-auto px-5 sm:px-6 relative hero-glow overflow-hidden"
     >
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-10 items-start">
-        
+      {/* Decorative accent orb - top right */}
+      <div className="accent-orb absolute top-0 right-0 w-96 h-96 opacity-40" />
+
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-10 items-start relative z-10">
+
         {/* Left Editorial Content (7 cols) */}
         <div className="md:col-span-7 space-y-6 sm:space-y-7">
-          
+
           {/* Section Tag */}
           <FadeIn delay={0.05} direction="up">
             <div className="flex items-center gap-2">
-              <span className="text-[10px] sm:text-[11px] font-mono font-medium tracking-[0.2em] uppercase text-accent bg-accent/10 px-2.5 py-1 rounded">
+              <span className="text-[10px] sm:text-[11px] font-mono font-medium tracking-[0.2em] uppercase text-accent bg-accent-muted px-2.5 py-1 rounded">
                 01 — SOFTWARE DEVELOPER · ENGINEERING STUDENT
               </span>
             </div>
@@ -63,7 +66,7 @@ export default function Hero() {
           {/* Main Typography */}
           <FadeIn delay={0.15} direction="up" className="space-y-3 sm:space-y-4">
             <h1 className="text-3xl sm:text-5xl md:text-6xl font-medium tracking-tight text-foreground leading-[1.12]">
-              Hi, I&apos;m {profile.displayName}.
+              Hi, I&apos;m <span className="gradient-text font-semibold">{profile.displayName}</span>.
             </h1>
             <p className="text-base sm:text-xl text-foreground-muted font-normal leading-relaxed tracking-tight font-sans">
               {profile.bio}
@@ -73,13 +76,13 @@ export default function Hero() {
           {/* Action Links & Download Resume Button */}
           <FadeIn delay={0.25} direction="up">
             <div className="pt-2 flex flex-wrap items-center gap-2.5 sm:gap-3">
-              
+
               {/* View Projects CTA */}
               <motion.a
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 href="#projects"
-                className="inline-flex items-center gap-2 px-4 py-2.5 rounded bg-foreground text-background text-xs sm:text-sm font-medium hover:bg-[#292524] transition-colors duration-150 shadow-sm touch-manipulation font-mono"
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded bg-foreground text-background text-xs sm:text-sm font-medium hover:bg-foreground-muted transition-colors duration-150 shadow-sm touch-manipulation font-mono relative overflow-hidden hover-shine"
               >
                 <span>View Projects</span>
                 <ArrowDown className="w-3.5 h-3.5" />
@@ -92,7 +95,7 @@ export default function Hero() {
                 href="/resume"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-2.5 rounded border border-border bg-surface text-foreground text-xs sm:text-sm font-medium hover:bg-surface-card hover:border-neutral-400 transition-all duration-150 shadow-sm touch-manipulation font-mono"
+                className="inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-2.5 rounded border border-border bg-surface text-foreground text-xs sm:text-sm font-medium hover:bg-surface-card hover:border-accent transition-all duration-150 shadow-sm touch-manipulation font-mono"
                 title="View and Print Resume (PDF)"
               >
                 <FileDown className="w-4 h-4 text-accent" />
@@ -106,7 +109,7 @@ export default function Hero() {
                 href={profile.social.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-2.5 rounded border border-border bg-surface text-foreground text-xs sm:text-sm font-medium hover:bg-surface-card hover:border-neutral-400 transition-all duration-150 shadow-sm touch-manipulation font-mono"
+                className="inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-2.5 rounded border border-border bg-surface text-foreground text-xs sm:text-sm font-medium hover:bg-surface-card hover:border-accent transition-all duration-150 shadow-sm touch-manipulation font-mono"
               >
                 <Github className="w-3.5 h-3.5" />
                 <span>GitHub</span>
@@ -120,7 +123,7 @@ export default function Hero() {
                 href={profile.social.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-2.5 rounded border border-border bg-surface text-foreground text-xs sm:text-sm font-medium hover:bg-surface-card hover:border-neutral-400 transition-all duration-150 shadow-sm touch-manipulation font-mono"
+                className="inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-2.5 rounded border border-border bg-surface text-foreground text-xs sm:text-sm font-medium hover:bg-surface-card hover:border-accent transition-all duration-150 shadow-sm touch-manipulation font-mono"
               >
                 <Linkedin className="w-3.5 h-3.5" />
                 <span>LinkedIn</span>
@@ -149,9 +152,9 @@ export default function Hero() {
         {/* Right Column: Profile Avatar Branding & Live GitHub Metadata (5 cols) */}
         <div className="md:col-span-5 md:pl-2 space-y-4">
           <FadeIn delay={0.2} direction="up">
-            
-            <SmoothCard className="bg-surface border border-border rounded-lg p-5 sm:p-6 space-y-4 shadow-sm hover:shadow-md transition-all">
-              
+
+            <SmoothCard className="bg-surface border border-border rounded-lg p-5 sm:p-6 space-y-4 shadow-sm hover:shadow-md transition-all backdrop-blur-sm">
+
               {/* Professional Profile Avatar Header with Real Profile Photo */}
               <div className="flex items-center gap-4 border-b border-border/70 pb-4">
                 <div className="w-16 h-16 rounded-full border-2 border-accent/60 relative overflow-hidden flex-shrink-0 shadow-sm bg-surface-subtle flex items-center justify-center">
@@ -167,7 +170,7 @@ export default function Hero() {
                   )}
                   <div className="absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full bg-accent border-2 border-surface" title="Active" />
                 </div>
-                
+
                 <div className="space-y-0.5">
                   <div className="flex items-center gap-1.5">
                     <h2 className="text-base font-medium text-foreground tracking-tight">
