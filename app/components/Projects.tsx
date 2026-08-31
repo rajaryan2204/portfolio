@@ -154,16 +154,16 @@ export default function Projects() {
   return (
     <section
       id="projects"
-      className="py-16 md:py-24 border-t border-border max-w-4xl mx-auto px-5 sm:px-6"
+      className="py-16 md:py-24 border-t border-border max-w-4xl mx-auto px-5 sm:px-6 section-glow"
     >
       <div className="space-y-12">
-        
+
         {/* Section Header */}
         <FadeIn delay={0.05}>
           <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4 border-b border-border/80 pb-4">
             <div>
               <span className="text-[11px] font-mono font-medium tracking-[0.2em] uppercase text-accent block">
-                04 / FEATURED WORK & CODE
+                06 / FEATURED WORK & CODE
               </span>
               <h2 className="text-2xl sm:text-3xl font-medium tracking-tight text-foreground">
                 Featured Projects & Systems
@@ -179,17 +179,17 @@ export default function Projects() {
           </div>
         </FadeIn>
 
-        {/* 5 Core Featured Projects Grid (InterviewX AI, SLIET Voice, VisionX, SyncBridge, RajJarvis) */}
+        {/* 5 Core Featured Projects Grid */}
         <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {CORE_FEATURED_PROJECTS.map((proj) => {
             const BadgeIcon = proj.badgeIcon;
             return (
               <StaggerItem key={proj.id}>
-                <SmoothCard className="p-5 sm:p-6 rounded border border-border bg-surface hover:bg-[#fbf8f2] hover:border-neutral-400 transition-all duration-200 flex flex-col justify-between space-y-4 shadow-sm group h-full">
+                <SmoothCard className="p-5 sm:p-6 rounded-xl border border-border bg-surface hover:bg-surface-card hover:border-accent transition-all duration-200 flex flex-col justify-between space-y-4 shadow-sm group h-full hover:shadow-md">
                   <div className="space-y-3">
-                    
+
                     {/* Visual UI Preview Banner */}
-                    <div className="h-28 rounded bg-surface-subtle border border-border/70 p-3 flex flex-col justify-between overflow-hidden relative group-hover:border-accent/40 transition-colors">
+                    <div className="h-28 rounded-lg bg-surface-subtle border border-border/70 p-3 flex flex-col justify-between overflow-hidden relative group-hover:border-accent/40 transition-colors">
                       <div className="flex items-center justify-between text-[10px] font-mono text-foreground-subtle">
                         <div className="flex items-center gap-1.5">
                           <div className="w-2 h-2 rounded-full bg-red-400/80" />
@@ -214,7 +214,7 @@ export default function Projects() {
 
                     {/* Top Row: Badge & Subtitle */}
                     <div className="flex items-center justify-between pt-1">
-                      <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-accent font-semibold flex items-center gap-1.5 bg-accent/10 px-2 py-0.5 rounded">
+                      <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-accent font-semibold flex items-center gap-1.5 bg-accent-muted px-2 py-0.5 rounded">
                         <BadgeIcon className="w-3 h-3" />
                         {proj.badge}
                       </span>
@@ -253,7 +253,7 @@ export default function Projects() {
                         href={proj.liveUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 text-xs font-mono font-medium text-background bg-foreground px-3 py-1.5 rounded hover:bg-[#292524] transition-colors"
+                        className="inline-flex items-center gap-1.5 text-xs font-mono font-medium text-background bg-foreground px-3 py-1.5 rounded hover:bg-foreground-muted transition-colors"
                       >
                         <Globe className="w-3.5 h-3.5" />
                         <span>Live Demo ↗</span>
@@ -263,7 +263,7 @@ export default function Projects() {
                         href={proj.githubUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 text-xs font-mono font-medium text-background bg-foreground px-3 py-1.5 rounded hover:bg-[#292524] transition-colors"
+                        className="inline-flex items-center gap-1.5 text-xs font-mono font-medium text-background bg-foreground px-3 py-1.5 rounded hover:bg-foreground-muted transition-colors"
                       >
                         <ExternalLink className="w-3.5 h-3.5" />
                         <span>View Project ↗</span>
@@ -316,7 +316,7 @@ export default function Projects() {
                     className={`text-xs px-3 py-1 rounded border font-mono transition-colors ${
                       isActive
                         ? "bg-foreground text-background border-foreground font-medium"
-                        : "bg-surface border-border text-foreground-muted hover:text-foreground"
+                        : "bg-surface border-border text-foreground-muted hover:text-foreground hover:border-accent"
                     }`}
                   >
                     {filter}
@@ -326,7 +326,7 @@ export default function Projects() {
             </div>
           )}
 
-          {/* Loading Skeleton (Smooth & Zero Stall) */}
+          {/* Loading Skeleton */}
           {loading && (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {[1, 2, 3, 4, 5, 6].map((sk) => (
@@ -351,7 +351,7 @@ export default function Projects() {
             <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {filteredRepositories.map((repo) => (
                 <StaggerItem key={repo.id}>
-                  <SmoothCard className="p-4 rounded border border-border bg-surface hover:bg-[#fbf8f2] hover:border-neutral-400 transition-all duration-150 flex flex-col justify-between space-y-3 shadow-sm h-full group">
+                  <SmoothCard className="p-4 rounded-xl border border-border bg-surface hover:bg-surface-card hover:border-accent transition-all duration-150 flex flex-col justify-between space-y-3 shadow-sm h-full group">
                     <div className="space-y-1.5">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-1.5">
@@ -386,7 +386,7 @@ export default function Projects() {
                         href={repo.html_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-foreground-muted hover:text-foreground inline-flex items-center gap-0.5 transition-colors"
+                        className="text-foreground-muted hover:text-accent inline-flex items-center gap-0.5 transition-colors"
                       >
                         <span>Code</span>
                         <ArrowUpRight className="w-3 h-3" />

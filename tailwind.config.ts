@@ -15,6 +15,7 @@ const config: Config = {
         surface: "var(--surface)",
         "surface-card": "var(--surface-card)",
         "surface-subtle": "var(--surface-subtle)",
+        "surface-alt": "var(--surface-alt)",
         border: "var(--border)",
         "border-dark": "var(--border-dark)",
         foreground: "var(--foreground)",
@@ -24,10 +25,12 @@ const config: Config = {
           DEFAULT: "var(--accent)",
           hover: "var(--accent-hover)",
           muted: "var(--accent-muted)",
+          glow: "var(--accent-glow)",
         },
       },
       fontFamily: {
         sans: [
+          '"Inter"',
           "-apple-system",
           "BlinkMacSystemFont",
           '"Segoe UI"',
@@ -36,12 +39,27 @@ const config: Config = {
           "Arial",
           "sans-serif",
         ],
+        display: [
+          '"Playfair Display"',
+          "Georgia",
+          '"Times New Roman"',
+          "serif",
+        ],
         mono: [
           '"JetBrains Mono"',
           '"Fira Code"',
           "Consolas",
           "monospace",
         ],
+      },
+      animation: {
+        "gradient-shift": "gradient-shift 6s ease infinite",
+      },
+      keyframes: {
+        "gradient-shift": {
+          "0%, 100%": { backgroundPosition: "0% 50%" },
+          "50%": { backgroundPosition: "100% 50%" },
+        },
       },
     },
   },

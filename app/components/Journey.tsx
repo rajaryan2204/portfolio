@@ -2,6 +2,7 @@
 
 import { profile } from "@/data/profile";
 import { FadeIn, StaggerContainer, StaggerItem } from "./MotionWrapper";
+import { Calendar } from "lucide-react";
 
 export default function Journey() {
   const { journey } = profile;
@@ -12,13 +13,13 @@ export default function Journey() {
       className="py-16 md:py-24 border-t border-border max-w-4xl mx-auto px-5 sm:px-6"
     >
       <div className="space-y-10">
-        
+
         {/* Section Header */}
         <FadeIn delay={0.05}>
           <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 border-b border-border/80 pb-4">
             <div>
               <span className="text-[11px] font-mono font-medium tracking-[0.2em] uppercase text-accent block">
-                06 / TIMELINE
+                08 / TIMELINE
               </span>
               <h2 className="text-2xl sm:text-3xl font-medium tracking-tight text-foreground">
                 Journey & Milestones
@@ -38,7 +39,7 @@ export default function Journey() {
                 <span className="text-sm font-mono font-semibold text-accent select-none">
                   {item.year}
                 </span>
-                <div className="h-[1px] flex-grow bg-border group-hover:bg-neutral-400 transition-colors duration-200" />
+                <div className="h-[1px] flex-grow bg-border group-hover:bg-accent transition-colors duration-200" />
                 {item.tag && (
                   <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded bg-surface border border-border text-foreground-subtle">
                     {item.tag}

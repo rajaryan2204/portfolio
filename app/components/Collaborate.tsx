@@ -183,7 +183,7 @@ export default function Collaborate() {
         <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4 border-b border-border/80 pb-4">
           <div>
             <span className="text-[11px] font-mono font-medium tracking-[0.2em] uppercase text-accent block">
-              06 / TEAM UP & HACKATHONS
+              09 / TEAM UP & HACKATHONS
             </span>
             <h2 className="text-2xl sm:text-3xl font-medium tracking-tight text-foreground">
               Hackathon & Team Recruitment Board
@@ -452,7 +452,7 @@ export default function Collaborate() {
       {/* User Live Applications Status Modal */}
       {statusModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-150">
-          <div className="bg-[#ede8dc] border border-border rounded-lg max-w-lg w-full p-6 sm:p-8 shadow-2xl space-y-6 relative max-h-[90vh] overflow-y-auto">
+          <div className="bg-surface border border-border rounded-lg max-w-lg w-full p-6 sm:p-8 shadow-2xl space-y-6 relative max-h-[90vh] overflow-y-auto">
             <button
               onClick={() => setStatusModalOpen(false)}
               className="absolute top-5 right-5 text-foreground-muted hover:text-foreground p-1 transition-colors"
@@ -550,7 +550,7 @@ export default function Collaborate() {
       {/* Team Application Modal (Only accessible after Google Sign In) */}
       {applyModalOpp && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-150">
-          <div className="bg-[#ede8dc] border border-border rounded-lg max-w-lg w-full p-6 sm:p-8 shadow-2xl space-y-6 relative max-h-[90vh] overflow-y-auto">
+          <div className="bg-surface border border-border rounded-lg max-w-lg w-full p-6 sm:p-8 shadow-2xl space-y-6 relative max-h-[90vh] overflow-y-auto">
             <button
               onClick={() => setApplyModalOpp(null)}
               className="absolute top-5 right-5 text-foreground-muted hover:text-foreground p-1 transition-colors"
@@ -590,7 +590,7 @@ export default function Collaborate() {
                     <select
                       value={selectedRole}
                       onChange={(e) => setSelectedRole(e.target.value)}
-                      className="w-full px-3 py-2 text-sm rounded bg-[#fbf8f2] border border-border text-foreground focus:border-neutral-700 font-sans"
+                      className="w-full px-3 py-2 text-sm rounded bg-surface-card border border-border text-foreground focus:border-accent font-sans transition-colors"
                     >
                       {applyModalOpp.rolesNeeded.map((r, i) => (
                         <option key={i} value={r}>
@@ -610,7 +610,7 @@ export default function Collaborate() {
                       value={applicantPitch}
                       onChange={(e) => setApplicantPitch(e.target.value)}
                       placeholder="Briefly describe your relevant tech skills, projects, and what you can build for this technical fest/hackathon..."
-                      className="w-full px-3 py-2 text-sm rounded bg-[#fbf8f2] border border-border text-foreground focus:border-neutral-700 resize-y"
+                      className="w-full px-3 py-2 text-sm rounded bg-surface-card border border-border text-foreground focus:border-accent resize-y transition-colors"
                     />
                   </div>
 

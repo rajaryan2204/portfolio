@@ -1,6 +1,7 @@
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import About from "./components/About";
+import Currently from "./components/Currently";
 import Certifications from "./components/Certifications";
 import Skills from "./components/Skills";
 import Projects from "./components/Projects";
@@ -12,11 +13,12 @@ import Footer from "./components/Footer";
 
 export default function Home() {
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground selection:bg-surface-subtle selection:text-foreground">
+    <div className="min-h-screen flex flex-col bg-background text-foreground selection:bg-surface-subtle selection:text-foreground page-enter">
       <Navbar />
       <main className="flex-grow">
         <Hero />
         <About />
+        <Currently />
         <Certifications />
         <Skills />
         <Projects />
